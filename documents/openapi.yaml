@@ -1,0 +1,163 @@
+openapi: 3.0.3
+info:
+  title: Pizzeria - OpenAPI 3.0
+  description: |-
+    This is a Pizzeria Server based on the OpenAPI 3.0 specification.
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080/api/v1/
+tags:
+  - name: pizzas
+    description: Everything about Pizzas
+paths:
+  /pizzas:
+    get:
+      tags:
+        - pizzas
+      summary: Returns a list of pizzas
+      operationId: getAllPizzas
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pizza'       
+        '404':
+          description: Not Found
+    post:
+      tags:
+        - pizzas
+      summary: Create a new pizza
+      operationId: createPizza
+      requestBody:
+        content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/Pizza'
+      responses:
+        '200':
+          description: new pizza was created successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pizza'       
+        '500':
+          description: Internal Server Error
+  /pizzas/{id}:
+    get:
+      tags:
+        - pizzas
+      summary: Returns a pizza by id
+      operationId: getPizzaById
+      parameters:
+        - name: id
+          in: path
+          description: Pizza Id to find in the database
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 3
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pizza'       
+        '404':
+          description: Not Found
+    put:
+      tags:
+        - pizzas
+      summary: Update an exist pizza
+      operationId: updatePizza
+      parameters:
+        - name: id
+          in: path
+          description: Pizza Id to update an exist pizza in the database
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 3
+      requestBody:
+        content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/Pizza'
+      responses:
+        '200':
+          description: pizza was updated successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pizza'       
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - pizzas
+      summary: Delete a pizza by id
+      operationId: deletePizzaById
+      parameters:
+        - name: id
+          in: path
+          description: Pizza Id to find in the database
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 3
+      responses:
+        '200':
+          description: pizza was deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pizza'       
+        '404':
+          description: Not Found
+components:
+  schemas:
+    Pizza:
+      type: object
+      required:
+        - name
+        - size
+        - price
+        - photoUrls
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: Pizza Margarita
+        price:
+          type: integer
+          format: float
+          example: 12.50
+        size:
+          type: string
+          enum: 
+            - small
+            - standart
+            - large
+          example: standart
+        # photoUrls:
+        #   type: array
+        #   xml:
+        #     wrapped: true
+        #   items:
+        #     type: string
+        #     xml:
+        #       name: photoUrl
