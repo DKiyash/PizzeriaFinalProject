@@ -112,7 +112,7 @@
 3.	Список Пицц обновляется в режиме реального времени при добавлении или удалении элементов.
 
 ## Entity Relations Diagram
-![ER Diagram](https://github.com/DKiyash/PizzeriaProject/blob/main/ER%20Diagram.jpg)
+![ER Diagram](https://github.com/DKiyash/PizzeriaFinalProject/blob/master/documents/ER%20Diagram.jpg)
 
 ## Rest API in OpenAPI 3
-[Rest API](https://github.com/DKiyash/PizzeriaProject/blob/main/openapi.yaml)
+[Rest API](https://github.com/DKiyash/PizzeriaFinalProject/blob/master/documents/openapi.yaml)
