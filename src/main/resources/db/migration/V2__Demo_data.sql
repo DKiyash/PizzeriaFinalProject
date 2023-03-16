@@ -10,3 +10,13 @@ insert into pizzeria_project.pizza (p_name, p_description, p_base_price, p_photo
 values ('Pizza Manhattan', 'Peperoni, Mozarella, sauce, Mushrooms', 10, 'url Pizza Manhattan'),
        ('Pizza Margarita', 'Mozarella(x2), sauce', 11, 'url Pizza Margarita'),
        ('Pizza Pepperoni With Tomatoes', 'Tomatoes, Peperoni, BBQ sauce, Mozarella', 9, 'url Pizza Pepperoni With Tomatoes');
+
+# Заполнение таблицы pizzeria_pizza
+insert into pizzeria_project.pizzeria_pizza (pr_id, p_id)
+values (1, 1),
+       (1, 2),
+       (1, 3),
+       (2, 2),
+       (2, 3),
+       (3, 1),
+       (3, 3);

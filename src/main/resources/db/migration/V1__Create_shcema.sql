@@ -1,6 +1,6 @@
-DROP DATABASE if exists pizzeria_project;
-create schema if not exists pizzeria_project;
-use pizzeria_project;
+# DROP DATABASE if exists pizzeria_project;
+# create schema if not exists pizzeria_project;
+# use pizzeria_project;
 # Создание таблицы pizzeria
 create table if not exists pizzeria_project.pizzeria
 (
@@ -25,7 +25,8 @@ create table if not exists pizzeria_project.pizzeria_pizza
     pr_id integer not null,
     p_id integer not null,
     foreign key (pr_id) references pizzeria(pr_id),
-    foreign key (p_id) references pizza(p_id)
+    foreign key (p_id) references pizza(p_id),
+    constraint uc_pr_p unique (pr_id, p_id)
 );
 
 
