@@ -1,0 +1,51 @@
+package de.telran.pizzeriaproject.domain;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "pizza")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Pizza {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "p_id")
+    private Long p_id;
+
+    @Column(name = "p_name", nullable = false, unique = true, length = 64)
+    private String p_name;
+
+    @Column(name = "p_description", nullable = false, unique = true, length = 255)
+    private String p_description;
+
+    @Column(name = "p_base_price", nullable = false)
+    private String p_base_price;
+
+    @Column(name = "p_photo_link", nullable = false, length = 2048)
+    private String p_photo_link;
+
+    @ManyToMany (mappedBy = "pizzaSet")
+    private Set<Pizzeria> pizzeriaSet =  new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Pizza pizza)) return false;
+
+        return getP_id() != null ? getP_id().equals(pizza.getP_id()) : pizza.getP_id() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getP_id() != null ? getP_id().hashCode() : 0;
+    }
+}

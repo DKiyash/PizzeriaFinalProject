@@ -5,8 +5,8 @@
 create table if not exists pizzeria_project.pizzeria
 (
     pr_id integer primary key auto_increment,
-    pr_name varchar(64) not null,
-    pr_address varchar(128) not null
+    pr_name varchar(64) unique not null,
+    pr_address varchar(128) unique not null
 );
 
 # Создание таблицы pizza
