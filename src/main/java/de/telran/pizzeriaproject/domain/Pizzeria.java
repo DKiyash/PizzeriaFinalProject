@@ -1,6 +1,9 @@
 package de.telran.pizzeriaproject.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,10 +24,16 @@ public class Pizzeria {
     @Column(name = "pr_id")
     private Long pr_id;
 
-    @Column(name = "pr_name", nullable = false, unique = true, length = 64)
+    @NotEmpty
+    @NotBlank
+    @NotNull
+    @Column(name = "pr_name", unique = true, length = 64)
     private String pr_name;
 
-    @Column(name = "pr_address", nullable = false, unique = true, length = 128)
+    @NotEmpty
+    @NotBlank
+    @NotNull
+    @Column(name = "pr_address", unique = true, length = 128)
     private String pr_address;
 
     @ManyToMany

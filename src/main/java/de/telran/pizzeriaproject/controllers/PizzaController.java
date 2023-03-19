@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/pizzas")
+@RequestMapping("/admin-api/v1/pizzas")
 public class PizzaController {
     private final PizzaSersice pizzaSersice;
 

@@ -1,6 +1,7 @@
 package de.telran.pizzeriaproject.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,16 +22,28 @@ public class Pizza {
     @Column(name = "p_id")
     private Long p_id;
 
-    @Column(name = "p_name", nullable = false, unique = true, length = 64)
+    @NotEmpty
+    @NotBlank
+    @NotNull
+    @Column(name = "p_name", unique = true, length = 64)
     private String p_name;
 
-    @Column(name = "p_description", nullable = false, unique = true, length = 255)
+    @NotEmpty
+    @NotBlank
+    @NotNull
+    @Column(name = "p_description", unique = true, length = 255)
     private String p_description;
 
-    @Column(name = "p_base_price", nullable = false)
+    @NotNull
+    @Min(value = 0, message = "The price must be bigger than 0")
+    @Max(value = 100, message = "The price must be less or equal to 100")
+    @Column(name = "p_base_price")
     private String p_base_price;
 
-    @Column(name = "p_photo_link", nullable = false, length = 2048)
+    @NotEmpty
+    @NotBlank
+    @NotNull
+    @Column(name = "p_photo_link", length = 2048)
     private String p_photo_link;
 
     @ManyToMany (mappedBy = "pizzaSet")
