@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/admin-api/v1/pizzas")
+@RequestMapping("/api/v1/pizzas")
 public class PizzaController {
     private final PizzaSersice pizzaSersice;
 
@@ -26,7 +26,7 @@ public class PizzaController {
     ResponseEntity<?> getAllPizzas() {
         //Если список не пустой, то вернуть его
         List<Pizza> pizzaList = pizzaSersice.findAll();
-        if (!pizzaList.isEmpty()){
+        if (!pizzaList.isEmpty()) {
             return ResponseEntity.ok(pizzaList);
         }
         //Если список пустой, то вернуть "NOT_FOUND"
@@ -38,7 +38,7 @@ public class PizzaController {
     ResponseEntity<?> createPizza(@RequestBody Pizza newPizza) {
         //Если новая пицца добавлена, то вернуть код 201 и location (ссылку на пиццу)
         Pizza pizza = pizzaSersice.save(newPizza);
-        if (pizza != null){
+        if (pizza != null) {
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("/{id}")
                     .buildAndExpand(pizza.getP_id())
@@ -70,8 +70,8 @@ public class PizzaController {
     @PutMapping("/{id}")
     ResponseEntity<?> updatePizzaById(@PathVariable Long id, @RequestBody Pizza newPizza) {
         //Если пицца есть в БД, то обновить ее
-        if (pizzaSersice.existsById(id)){
-            Pizza event=pizzaSersice.save(newPizza);
+        if (pizzaSersice.existsById(id)) {
+            Pizza event = pizzaSersice.save(newPizza);
             return ResponseEntity.ok(event);
         }
         //Если пиццы нет в БД, то вернуть "NOT_FOUND"
@@ -82,7 +82,7 @@ public class PizzaController {
     @DeleteMapping(value = "/{id}")
     ResponseEntity<?> deletePizzaById(@PathVariable Long id) {
         //Если пицца есть в БД, то удалить ее
-        if (pizzaSersice.existsById(id)){
+        if (pizzaSersice.existsById(id)) {
             pizzaSersice.deleteById(id);
             return ResponseEntity.ok().build();
         }

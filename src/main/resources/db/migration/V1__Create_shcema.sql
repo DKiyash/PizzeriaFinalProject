@@ -1,33 +1,33 @@
-# DROP DATABASE if exists pizzeria_project;
-# create schema if not exists pizzeria_project;
-# use pizzeria_project;
-# Создание таблицы pizzeria
-create table if not exists pizzeria_project.pizzeria
-(
-    pr_id integer primary key auto_increment,
-    pr_name varchar(64) unique not null,
-    pr_address varchar(128) unique not null
-);
-
-# Создание таблицы pizza
-create table if not exists pizzeria_project.pizza
-(
-    p_id integer primary key auto_increment,
-    p_name varchar(64) unique not null,
-    p_description varchar(255) unique not null,
-    p_base_price numeric(5, 2) check (p_base_price between 0 and 100) not null,
-    p_photo_link varchar(2048) not null
-);
-
-# Создание таблицы pizzeria_pizza
-create table if not exists pizzeria_project.pizzeria_pizza
-(
-    pr_id integer not null,
-    p_id integer not null,
-    foreign key (pr_id) references pizzeria(pr_id),
-    foreign key (p_id) references pizza(p_id),
-    constraint uc_pr_p unique (pr_id, p_id)
-);
+# # DROP DATABASE if exists pizzeria_project;
+# # create schema if not exists pizzeria_project;
+# # use pizzeria_project;
+# # Создание таблицы pizzeria
+# create table if not exists pizzeria_project.pizzeria
+# (
+#     pr_id integer primary key auto_increment,
+#     pr_name varchar(64) unique not null,
+#     pr_address varchar(128) unique not null
+# );
+#
+# # Создание таблицы pizza
+# create table if not exists pizzeria_project.pizza
+# (
+#     p_id integer primary key auto_increment,
+#     p_name varchar(64) unique not null,
+#     p_description varchar(255) unique not null,
+#     p_base_price numeric(5, 2) check (p_base_price between 0 and 100) not null,
+#     p_photo_link varchar(2048) not null
+# );
+#
+# # Создание таблицы pizzeria_pizza
+# create table if not exists pizzeria_project.pizzeria_pizza
+# (
+#     pr_id integer not null,
+#     p_id integer not null,
+#     foreign key (pr_id) references pizzeria(pr_id),
+#     foreign key (p_id) references pizza(p_id),
+#     constraint uc_pr_p unique (pr_id, p_id)
+# );
 
 
 
