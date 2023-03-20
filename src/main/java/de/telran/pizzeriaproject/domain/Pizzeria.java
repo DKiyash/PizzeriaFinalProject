@@ -27,13 +27,15 @@ public class Pizzeria {
 //    @NotEmpty
 //    @NotBlank
 //    @NotNull
-    @Column(name = "pr_name", unique = true, length = 64)
+//    @Column(name = "pr_name", unique = true, length = 64)
+    @Column(name = "pr_name", length = 64)
     private String pr_name;
 
 //    @NotEmpty
 //    @NotBlank
 //    @NotNull
-    @Column(name = "pr_address", unique = true, length = 128)
+//    @Column(name = "pr_address", unique = true, length = 128)
+    @Column(name = "pr_address", length = 128)
     private String pr_address;
 
 //    @ManyToMany

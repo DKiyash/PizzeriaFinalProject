@@ -25,13 +25,15 @@ public class Pizza {
 //    @NotEmpty
 //    @NotBlank
 //    @NotNull
-    @Column(name = "p_name", unique = true, length = 64)
+//    @Column(name = "p_name", unique = true, length = 64)
+    @Column(name = "p_name", length = 64)
     private String p_name;
 
 //    @NotEmpty
 //    @NotBlank
 //    @NotNull
-    @Column(name = "p_description", unique = true, length = 255)
+//    @Column(name = "p_description", unique = true, length = 255)
+    @Column(name = "p_description", length = 255)
     private String p_description;
 
 //    @NotNull

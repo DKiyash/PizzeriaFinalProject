@@ -71,8 +71,8 @@ public class PizzaController {
     ResponseEntity<?> updatePizzaById(@PathVariable Long id, @RequestBody Pizza newPizza) {
         //Если пицца есть в БД, то обновить ее
         if (pizzaSersice.existsById(id)) {
-            Pizza event = pizzaSersice.save(newPizza);
-            return ResponseEntity.ok(event);
+            Pizza pizza = pizzaSersice.save(newPizza);
+            return ResponseEntity.ok(pizza);
         }
         //Если пиццы нет в БД, то вернуть "NOT_FOUND"
         else return ResponseEntity.notFound().build();
