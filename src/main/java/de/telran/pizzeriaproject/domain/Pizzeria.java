@@ -1,5 +1,6 @@
 package de.telran.pizzeriaproject.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 //import jakarta.validation.constraints.NotBlank;
 //import jakarta.validation.constraints.NotEmpty;
@@ -38,10 +39,11 @@ public class Pizzeria {
     @Column(name = "pr_address", length = 128)
     private String pr_address;
 
-//    @ManyToMany
-//    @JoinTable(name = "pizzeria_pizza", joinColumns = @JoinColumn(name = "pr_id"),
-//            inverseJoinColumns = @JoinColumn(name = "p_id"))
-//    private Set<Pizza> pizzaSet = new HashSet<>();
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "pizzeria_pizza", joinColumns = @JoinColumn(name = "pr_id"),
+            inverseJoinColumns = @JoinColumn(name = "p_id"))
+    private Set<Pizza> pizzaSet = new HashSet<>();
 
 
     public Pizzeria(String pr_name, String pr_address) {

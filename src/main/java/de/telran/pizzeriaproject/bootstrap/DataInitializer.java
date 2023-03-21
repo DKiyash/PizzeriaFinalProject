@@ -24,20 +24,27 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 //        Заполнение таблицы pizzeria (для теста)
-        Pizzeria pizzeria1 = new Pizzeria("Pizzeria_01", "Address_01");
-        Pizzeria pizzeria2 = new Pizzeria("Pizzeria_02", "Address_02");
-        Pizzeria pizzeria3 = new Pizzeria("Pizzeria_03", "Address_03");
+        Pizzeria pizzeria1 = pizzeriaRepositories.save(new Pizzeria("Pizzeria_01", "Address_01"));
+        Pizzeria pizzeria2 = pizzeriaRepositories.save(new Pizzeria("Pizzeria_02", "Address_02"));
+        Pizzeria pizzeria3 = pizzeriaRepositories.save(new Pizzeria("Pizzeria_03", "Address_03"));
+
+//        Заполнение таблицы pizza
+        Pizza pizza1 = pizzaRepositories.save(new Pizza("Pizza name_01","Description_01", 10.00, "url_01"));
+        Pizza pizza2 = pizzaRepositories.save(new Pizza("Pizza name_02", "Description_02", 11.00, "url_02"));
+        Pizza pizza3 = pizzaRepositories.save(new Pizza("Pizza name_03", "Description_03", 9.00, "url_03"));
+
+//        Создание списка пицц в пиццерии
+        pizzeria1.getPizzaSet().add(pizza1);
+        pizzeria1.getPizzaSet().add(pizza2);
+
+        pizzeria2.getPizzaSet().add(pizza2);
+        pizzeria2.getPizzaSet().add(pizza3);
+
+        pizzeria3.getPizzaSet().add(pizza1);
+
         pizzeriaRepositories.save(pizzeria1);
         pizzeriaRepositories.save(pizzeria2);
         pizzeriaRepositories.save(pizzeria3);
-
-//        Заполнение таблицы pizza
-        Pizza pizza1 = new Pizza("Pizza name_01", "Description_01", 10.00, "url_01");
-        Pizza pizza2 = new Pizza("Pizza name_02", "Description_02", 11.00, "url_02");
-        Pizza pizza3 = new Pizza("Pizza name_03", "Description_03", 9.00, "url_03");
-        pizzaRepositories.save(pizza1);
-        pizzaRepositories.save(pizza2);
-        pizzaRepositories.save(pizza3);
 
     }
 

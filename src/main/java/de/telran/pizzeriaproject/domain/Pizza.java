@@ -1,5 +1,6 @@
 package de.telran.pizzeriaproject.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 //import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -48,8 +49,9 @@ public class Pizza {
     @Column(name = "p_photo_link", length = 2048)
     private String p_photo_link;
 
-//    @ManyToMany (mappedBy = "pizzaSet")
-//    private Set<Pizzeria> pizzeriaSet =  new HashSet<>();
+    @JsonIgnore
+    @ManyToMany (mappedBy = "pizzaSet")
+    private Set<Pizzeria> pizzeriaSet =  new HashSet<>();
 
 
     public Pizza(String p_name, String p_description, Double p_base_price, String p_photo_link) {
