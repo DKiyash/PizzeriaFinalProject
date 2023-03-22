@@ -41,8 +41,8 @@ public class Pizzeria {
 
     @JsonIgnore
     @ManyToMany
-    @JoinTable(name = "pizzeria_pizza", joinColumns = @JoinColumn(name = "pr_id"),
-            inverseJoinColumns = @JoinColumn(name = "p_id"))
+    @JoinTable(name = "pizzeria_pizza", joinColumns = @JoinColumn(name = "pizzeria_id"),
+            inverseJoinColumns = @JoinColumn(name = "pizza_id"))
     private Set<Pizza> pizzaSet = new HashSet<>();
 
 

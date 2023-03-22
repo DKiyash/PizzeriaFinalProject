@@ -50,7 +50,9 @@ public class Pizza {
     private String p_photo_link;
 
     @JsonIgnore
-    @ManyToMany (mappedBy = "pizzaSet")
+    @ManyToMany
+    @JoinTable(name = "pizzeria_pizza", joinColumns = @JoinColumn(name = "pizza_id"),
+            inverseJoinColumns = @JoinColumn(name = "pizzeria_id"))
     private Set<Pizzeria> pizzeriaSet =  new HashSet<>();
 
 

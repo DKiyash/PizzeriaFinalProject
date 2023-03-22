@@ -3,6 +3,7 @@ package de.telran.pizzeriaproject.services;
 import de.telran.pizzeriaproject.domain.Pizzeria;
 import de.telran.pizzeriaproject.repositories.PizzeriaRepositories;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,7 @@ public class PizzeriaServiceImpl implements PizzeriaSersice {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Pizzeria save(Pizzeria newPizza) {
         return pizzeriaRepositories.save(newPizza);
     }
@@ -37,6 +39,7 @@ public class PizzeriaServiceImpl implements PizzeriaSersice {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteById(Long id) {
         pizzeriaRepositories.deleteById(id);
     }

@@ -1,3 +1,39 @@
+# Создание таблицы pizzeria БЕЗ constraints (чтобы не заморачиваться при тестировании через Postmen)
+create table if not exists pizzeria_project.pizzeria
+(
+    pr_id integer primary key auto_increment,
+    pr_name varchar(64),
+    pr_address varchar(128)
+);
+
+# Создание таблицы pizza БЕЗ constraints
+create table if not exists pizzeria_project.pizza
+(
+    p_id integer primary key auto_increment,
+    p_name varchar(64),
+    p_description varchar(255),
+    p_base_price numeric(5, 2),
+    p_photo_link varchar(2048)
+);
+
+# Создание таблицы pizzeria_pizza БЕЗ constraints
+create table if not exists pizzeria_project.pizzeria_pizza
+(
+    pizzeria_id integer references pizzeria(pr_id),
+    pizza_id integer references pizza(p_id),
+    primary key (pizzeria_id, pizza_id)
+);
+
+
+
+
+
+
+
+
+#-------------------------------------------------------------------------------------------------
+
+# СТАРЫЙ ВАРИАНТ
 # # DROP DATABASE if exists pizzeria_project;
 # # create schema if not exists pizzeria_project;
 # # use pizzeria_project;
