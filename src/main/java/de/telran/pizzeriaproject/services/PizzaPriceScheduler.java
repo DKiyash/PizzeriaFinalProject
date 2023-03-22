@@ -19,7 +19,7 @@ public class PizzaPriceScheduler {
     }
 
 //    @Scheduled(cron = "0 * * * * MON-FRI", zone = "Europe/Berlin") //Выполнение каждую минуту в 00 сек с Пн по Пт (для теста)
-    @Scheduled(cron = "0 0 13 * MON-FRI", zone = "Europe/Berlin") //Выполнение в 13:00 каждый день с Пн по Пт
+    @Scheduled(cron = "0 0 13 * * MON-FRI", zone = "Europe/Berlin") //Выполнение в 13:00 каждый день с Пн по Пт
     public void schedualePizzaPriceLanch(){
         List<Pizza> pizzaList = pizzaSersice.findAll();
         Double pizzaCurrentBasePrice;
@@ -33,7 +33,7 @@ public class PizzaPriceScheduler {
     }
 
 //    @Scheduled(cron = "30 * * * * MON-FRI", zone = "Europe/Berlin") //Выполнение каждую минуту в 30 сек с Пн по Пт (для теста)
-    @Scheduled(cron = "0 0 14 * MON-FRI", zone = "Europe/Berlin") //Выполнение в 14:00 каждый день с Пн по Пт
+    @Scheduled(cron = "0 0 14 * * MON-FRI", zone = "Europe/Berlin") //Выполнение в 14:00 каждый день с Пн по Пт
     public void schedualePizzaPriceNoLanch(){
         List<Pizza> pizzaList = pizzaSersice.findAll();
         Double pizzaCurrentBasePrice;
