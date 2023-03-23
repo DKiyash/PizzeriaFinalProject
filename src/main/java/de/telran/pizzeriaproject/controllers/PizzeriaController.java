@@ -2,6 +2,7 @@ package de.telran.pizzeriaproject.controllers;
 
 import de.telran.pizzeriaproject.domain.Pizzeria;
 import de.telran.pizzeriaproject.services.PizzeriaSersice;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/pizzerias")
 public class PizzeriaController {
@@ -39,6 +41,7 @@ public class PizzeriaController {
         //Если новая пиццерия добавлена, то вернуть код 201 и location (ссылку на пиццерию)
         Pizzeria pizzeria = pizzeriaSersice.save(newPizzeria);
         if (pizzeria != null) {
+            log.info("New Pizzeria added successfully");
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("/{id}")
                     .buildAndExpand(pizzeria.getPr_id())
@@ -84,6 +87,7 @@ public class PizzeriaController {
         //Если пиццерия есть в БД, то удалить ее
         if (pizzeriaSersice.existsById(id)) {
             pizzeriaSersice.deleteById(id);
+            log.warn("Pizzeria deleted");
             return ResponseEntity.ok().build();
         }
         //Если пиццерии нет в БД, то вернуть "NOT_FOUND"
