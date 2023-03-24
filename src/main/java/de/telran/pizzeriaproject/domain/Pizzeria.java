@@ -39,7 +39,7 @@ public class Pizzeria {
     @Column(name = "pr_address", length = 128)
     private String pr_address;
 
-    @JsonIgnore
+//    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "pizzeria_pizza", joinColumns = @JoinColumn(name = "pizzeria_id"),
             inverseJoinColumns = @JoinColumn(name = "pizza_id"))

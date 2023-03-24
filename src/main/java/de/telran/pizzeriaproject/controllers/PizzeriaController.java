@@ -1,6 +1,8 @@
 package de.telran.pizzeriaproject.controllers;
 
 import de.telran.pizzeriaproject.domain.Pizzeria;
+import de.telran.pizzeriaproject.exeptions.PizzaNotFoundException;
+import de.telran.pizzeriaproject.exeptions.PizzeriaNotFoundException;
 import de.telran.pizzeriaproject.services.PizzeriaSersice;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,6 @@ import java.util.Optional;
 public class PizzeriaController {
     private final PizzeriaSersice pizzeriaSersice;
 
-    @Autowired
     public PizzeriaController(PizzeriaSersice pizzeriaSersice) {
         this.pizzeriaSersice = pizzeriaSersice;
     }
@@ -38,20 +39,28 @@ public class PizzeriaController {
     //Создание новой пиццерии
     @PostMapping()
     ResponseEntity<?> createPizzeria(@RequestBody Pizzeria newPizzeria) {
-        //Если новая пиццерия добавлена, то вернуть код 201 и location (ссылку на пиццерию)
-        Pizzeria pizzeria = pizzeriaSersice.save(newPizzeria);
-        if (pizzeria != null) {
+        try {
+            //Попробовать создать пиццерию
+            pizzeriaSersice.save(newPizzeria);
             log.info("New Pizzeria added successfully");
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(pizzeria.getPr_id())
-                    .toUri();
-            return ResponseEntity.created(location).build();
+            return ResponseEntity.ok(newPizzeria);
+        } catch (PizzaNotFoundException e) {//Если список пицц некорректный, то вернуть "NOT_FOUND"
+            return ResponseEntity.notFound().build();
         }
-        //Если новая пиццерия не добавлена, то вернуть "500 Internal Server Error"
-        else {
-            return ResponseEntity.internalServerError().build();
-        }
+//        //Если новая пиццерия добавлена, то вернуть код 201 и location (ссылку на пиццерию)
+//        Pizzeria pizzeria = pizzeriaSersice.save(newPizzeria);
+//        if (pizzeria != null) {
+//            log.info("New Pizzeria added successfully");
+//            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+//                    .path("/{id}")
+//                    .buildAndExpand(pizzeria.getPr_id())
+//                    .toUri();
+//            return ResponseEntity.created(location).build();
+//        }
+//        //Если новая пиццерия не добавлена, то вернуть "500 Internal Server Error"
+//        else {
+//            return ResponseEntity.internalServerError().build();
+//        }
     }
 
 
@@ -68,30 +77,48 @@ public class PizzeriaController {
         else return ResponseEntity.notFound().build();
     }
 
-
     //Обновление существующей пиццерии
     @PutMapping("/{id}")
     ResponseEntity<?> updatePizzeriaById(@PathVariable Long id, @RequestBody Pizzeria newPizzeria) {
-        //Если пиццерия есть в БД, то обновить ее
-        if (pizzeriaSersice.existsById(id)) {
-            Pizzeria pizzeria = pizzeriaSersice.save(newPizzeria);
-            return ResponseEntity.ok(pizzeria);
+        try {
+            //Попробовать обновить пиццерию
+            Pizzeria updatedPizzeria = pizzeriaSersice.updatePizzeriaById(id, newPizzeria);
+            return ResponseEntity.ok(updatedPizzeria);
+        } catch (PizzeriaNotFoundException e) {//Если пиццерии нет в списке пицерий, то вернуть "NOT_FOUND"
+            return ResponseEntity.notFound().build();
+        } catch (PizzaNotFoundException e) {//Если список пицц некорректный, то вернуть "NOT_FOUND"
+            return ResponseEntity.notFound().build();
         }
-        //Если пиццерии нет в БД, то вернуть "NOT_FOUND"
-        else return ResponseEntity.notFound().build();
     }
+//    @PutMapping("/{id}")
+//    ResponseEntity<?> updatePizzeriaById(@PathVariable Long id, @RequestBody Pizzeria newPizzeria) {
+//        //Если пиццерия есть в БД, то обновить ее
+//        if (pizzeriaSersice.existsById(id)) {
+//            Pizzeria pizzeria = pizzeriaSersice.save(newPizzeria);
+//            return ResponseEntity.ok(pizzeria);
+//        }
+//        //Если пиццерии нет в БД, то вернуть "NOT_FOUND"
+//        else return ResponseEntity.notFound().build();
+//    }
 
     //Удаление пиццерии по ID
     @DeleteMapping(value = "/{id}")
     ResponseEntity<?> deletePizzeriaById(@PathVariable Long id) {
-        //Если пиццерия есть в БД, то удалить ее
-        if (pizzeriaSersice.existsById(id)) {
+        try {
+            //Попробовать удалить пиццерию
             pizzeriaSersice.deleteById(id);
-            log.warn("Pizzeria deleted");
             return ResponseEntity.ok().build();
+        } catch (PizzeriaNotFoundException e) {//Если пиццерии нет в БД, то вернуть "NOT_FOUND"
+            return ResponseEntity.notFound().build();
         }
-        //Если пиццерии нет в БД, то вернуть "NOT_FOUND"
-        else return ResponseEntity.notFound().build();
+//        //Если пиццерия есть в БД, то удалить ее
+//        if (pizzeriaSersice.existsById(id)) {
+//            pizzeriaSersice.deleteById(id);
+//            log.warn("Pizzeria deleted");
+//            return ResponseEntity.ok().build();
+//        }
+//        //Если пиццерии нет в БД, то вернуть "NOT_FOUND"
+//        else return ResponseEntity.notFound().build();
     }
 
 }
