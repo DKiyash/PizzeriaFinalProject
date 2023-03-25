@@ -28,12 +28,14 @@ public class PizzaServiceImpl implements PizzaSersice {
 
     //Получение списка всех пицц
     @Override
+    @Transactional(readOnly = true)
     public List<Pizza> findAll() {
         return pizzaRepositories.findAll();
     }
 
     //Поиск пиццы по id
     @Override
+    @Transactional(readOnly = true)
     public Optional<Pizza> findById(Long id) {
         return pizzaRepositories.findById(id);
     }

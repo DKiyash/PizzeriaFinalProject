@@ -45,12 +45,14 @@ public class PizzeriaServiceImpl implements PizzeriaSersice {
 
     //Получение списка всех пиццерий
     @Override
+    @Transactional(readOnly = true)
     public List<Pizzeria> findAll() {
         return pizzeriaRepositories.findAll();
     }
 
     //Поиск пиццерии по id
     @Override
+    @Transactional(readOnly = true)
     public Optional<Pizzeria> findById(Long id) {
         return pizzeriaRepositories.findById(id);
     }
