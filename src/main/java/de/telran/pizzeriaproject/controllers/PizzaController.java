@@ -6,6 +6,7 @@ import de.telran.pizzeriaproject.services.PizzaSersice;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -27,14 +28,9 @@ public class PizzaController {
 
     //Получение списка всех пицц
     @GetMapping()
-    ResponseEntity<?> getAllPizzas() {
-        List<Pizza> pizzaList = pizzaSersice.findAll();
-        //Если список не пустой, то вернуть его
-        if (!pizzaList.isEmpty()) {
+    ResponseEntity<?> getAllPizzas(Pageable pageable) {
+        Iterable<Pizza> pizzaList = pizzaSersice.findAll(pageable);
             return ResponseEntity.ok(pizzaList);
-        }
-        //Если список пустой, то вернуть "NOT_FOUND"
-        else return ResponseEntity.notFound().build();
     }
 
     //Создание новой пиццы

@@ -1,5 +1,6 @@
 package de.telran.pizzeriaproject.controllers;
 
+import de.telran.pizzeriaproject.domain.Pizza;
 import de.telran.pizzeriaproject.domain.Pizzeria;
 import de.telran.pizzeriaproject.exeptions.PizzaNotFoundException;
 import de.telran.pizzeriaproject.exeptions.PizzeriaNotFoundException;
@@ -7,6 +8,7 @@ import de.telran.pizzeriaproject.services.PizzeriaSersice;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -27,14 +29,9 @@ public class PizzeriaController {
 
     //Получение списка всех пиццерий
     @GetMapping()
-    ResponseEntity<?> getAllPizzeria() {
-        //Если список не пустой, то вернуть его
-        List<Pizzeria> pizzeriaList = pizzeriaSersice.findAll();
-        if (!pizzeriaList.isEmpty()) {
-            return ResponseEntity.ok(pizzeriaList);
-        }
-        //Если список пустой, то вернуть "NOT_FOUND"
-        else return ResponseEntity.notFound().build();
+    ResponseEntity<?> getAllPizzeria(Pageable pageable) {
+        Iterable<Pizzeria> pizzeriaList = pizzeriaSersice.findAll(pageable);
+        return ResponseEntity.ok(pizzeriaList);
     }
 
     //Создание новой пиццерии

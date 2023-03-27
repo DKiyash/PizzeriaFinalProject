@@ -6,6 +6,7 @@ import de.telran.pizzeriaproject.exeptions.PizzaNotFoundException;
 import de.telran.pizzeriaproject.exeptions.PizzeriaNotFoundException;
 import de.telran.pizzeriaproject.repositories.PizzaRepositories;
 import de.telran.pizzeriaproject.repositories.PizzeriaRepositories;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,11 +44,11 @@ public class PizzeriaServiceImpl implements PizzeriaSersice {
         return pizzeriaRepositories.save(newPizzeria);
     }
 
-    //Получение списка всех пиццерий
+    //Получение списка всех пиццерий постранично
     @Override
     @Transactional(readOnly = true)
-    public List<Pizzeria> findAll() {
-        return pizzeriaRepositories.findAll();
+    public Iterable<Pizzeria> findAll(Pageable pageable) {
+        return pizzeriaRepositories.findAll(pageable);
     }
 
     //Поиск пиццерии по id
