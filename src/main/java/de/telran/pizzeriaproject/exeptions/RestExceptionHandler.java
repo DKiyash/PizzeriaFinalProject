@@ -1,6 +1,7 @@
 package de.telran.pizzeriaproject.exeptions;
 
 import org.slf4j.MDC;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(problemDetail, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    //Обработка иключений при валидации (not null, not empty, size)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ProblemDetail> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
         List<String> errors = e.getBindingResult().getFieldErrors()
@@ -34,6 +36,18 @@ public class RestExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         problemDetail.setTitle(e.getMessage());
         problemDetail.setDetail(Arrays.toString(errors.toArray()));
+        problemDetail.setType(URI.create("https://api.documents.com/errors/unprocessable_entity"));
+        problemDetail.setProperty("timestamp", Instant.now());
+        problemDetail.setProperty("traceId", MDC.get("traceId"));
+        return new ResponseEntity<>(problemDetail, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    //Обработка иключений при валидации (unique)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    protected ResponseEntity<ProblemDetail> handleUniqueNotValid(DataIntegrityViolationException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        problemDetail.setTitle(e.getMessage());
+        problemDetail.setDetail("Duplicate entry");
         problemDetail.setType(URI.create("https://api.documents.com/errors/unprocessable_entity"));
         problemDetail.setProperty("timestamp", Instant.now());
         problemDetail.setProperty("traceId", MDC.get("traceId"));

@@ -2,7 +2,7 @@ package de.telran.pizzeriaproject.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-//import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "pizza")
+@Table(name = "pizza", uniqueConstraints = @UniqueConstraint(columnNames = {"p_name", "p_description"}))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,29 +23,29 @@ public class Pizza {
     @Column(name = "p_id")
     private Long p_id;
 
-//    @NotEmpty
-//    @NotBlank
-//    @NotNull
-//    @Column(name = "p_name", unique = true, length = 64)
-    @Column(name = "p_name", length = 64)
+    @NotEmpty
+    @NotBlank
+    @NotNull
+    @Size(min = 1, max = 64)
+    @Column(name = "p_name")
     private String p_name;
 
-//    @NotEmpty
-//    @NotBlank
-//    @NotNull
-//    @Column(name = "p_description", unique = true, length = 255)
-    @Column(name = "p_description", length = 255)
+    @NotEmpty
+    @NotBlank
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "p_description")
     private String p_description;
 
-//    @NotNull
-//    @Min(value = 0, message = "The price must be bigger than 0")
-//    @Max(value = 100, message = "The price must be less or equal to 100")
+    @NotNull
+    @Min(value = 0, message = "The price must be bigger than 0")
+    @Max(value = 100, message = "The price must be less or equal to 100")
     @Column(name = "p_base_price")
     private Double p_base_price;
 
-//    @NotEmpty
-//    @NotBlank
-//    @NotNull
+    @NotEmpty
+    @NotBlank
+    @NotNull
     @Column(name = "p_photo_link", length = 2048)
     private String p_photo_link;
 

@@ -3,6 +3,7 @@ package de.telran.pizzeriaproject.controllers;
 import de.telran.pizzeriaproject.domain.Pizza;
 import de.telran.pizzeriaproject.exeptions.PizzaNotFoundException;
 import de.telran.pizzeriaproject.services.PizzaSersice;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,7 @@ public class PizzaController {
 
     //Создание новой пиццы
     @PostMapping()
-    ResponseEntity<?> createPizza(@RequestBody Pizza newPizza) {
+    ResponseEntity<?> createPizza(@Valid @RequestBody Pizza newPizza) {
         //Если новая пицца добавлена, то вернуть код 201 и location (ссылку на пиццу)
         Pizza pizza = pizzaSersice.save(newPizza);
         if (pizza != null) {
@@ -72,7 +73,7 @@ public class PizzaController {
 
     //Обновление существующей пиццы
     @PutMapping("/{id}")
-    ResponseEntity<?> updatePizzaById(@PathVariable Long id, @RequestBody Pizza newPizza) {
+    ResponseEntity<?> updatePizzaById(@PathVariable Long id, @Valid @RequestBody Pizza newPizza) {
         try {
             //Попробовать обновить пиццу
             Pizza updatedPizza = pizzaSersice.updatePizzaById(id, newPizza);
@@ -80,13 +81,6 @@ public class PizzaController {
         } catch (PizzaNotFoundException e) {//Если пиццы нет в БД, то вернуть "NOT_FOUND"
             return ResponseEntity.notFound().build();
         }
-//        //Если пицца есть в БД, то обновить ее
-//        if (pizzaSersice.existsById(id)) {
-//            Pizza pizza = pizzaSersice.save(newPizza);
-//            return ResponseEntity.ok(pizza);
-//        }
-//        //Если пиццы нет в БД, то вернуть "NOT_FOUND"
-//        else return ResponseEntity.notFound().build();
     }
 
     //Удаление пиццы по ID
@@ -99,14 +93,6 @@ public class PizzaController {
         } catch (PizzaNotFoundException e) {//Если пиццы нет в БД, то вернуть "NOT_FOUND"
             return ResponseEntity.notFound().build();
         }
-//        //Если пицца есть в БД, то удалить ее
-//        if (pizzaSersice.existsById(id)) {
-//            pizzaSersice.deleteById(id);
-//            log.warn("Pizza deleted");
-//            return ResponseEntity.ok().build();
-//        }
-//        //Если пиццы нет в БД, то вернуть "NOT_FOUND"
-//        else return ResponseEntity.notFound().build();
     }
 
 }

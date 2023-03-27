@@ -1,22 +1,22 @@
-# Создание таблицы pizzeria БЕЗ constraints (чтобы не заморачиваться при тестировании через Postmen)
+# Создание таблицы pizzeria
 create table if not exists pizzeria_project.pizzeria
 (
     pr_id integer primary key auto_increment,
-    pr_name varchar(64),
-    pr_address varchar(128)
+    pr_name varchar(64) unique not null,
+    pr_address varchar(128) unique not null
 );
 
-# Создание таблицы pizza БЕЗ constraints
+# Создание таблицы pizza
 create table if not exists pizzeria_project.pizza
 (
     p_id integer primary key auto_increment,
-    p_name varchar(64),
-    p_description varchar(255),
-    p_base_price numeric(5, 2),
-    p_photo_link varchar(2048)
+    p_name varchar(64) unique not null,
+    p_description varchar(255) unique not null,
+    p_base_price numeric(5, 2) check (p_base_price between 0 and 100) not null,
+    p_photo_link varchar(2048) not null
 );
 
-# Создание таблицы pizzeria_pizza БЕЗ constraints
+# Создание таблицы pizzeria_pizza
 create table if not exists pizzeria_project.pizzeria_pizza
 (
     pizzeria_id integer references pizzeria(pr_id),

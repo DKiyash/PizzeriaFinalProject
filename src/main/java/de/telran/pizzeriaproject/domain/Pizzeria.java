@@ -1,10 +1,10 @@
 package de.telran.pizzeriaproject.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-//import jakarta.validation.constraints.NotBlank;
-//import jakarta.validation.constraints.NotEmpty;
-//import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "pizzeria")
+@Table(name = "pizzeria", uniqueConstraints = @UniqueConstraint(columnNames = {"pr_name", "pr_address"}))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,21 +25,20 @@ public class Pizzeria {
     @Column(name = "pr_id")
     private Long pr_id;
 
-//    @NotEmpty
-//    @NotBlank
-//    @NotNull
-//    @Column(name = "pr_name", unique = true, length = 64)
-    @Column(name = "pr_name", length = 64)
+    @NotEmpty
+    @NotBlank
+    @NotNull
+    @Size(min = 1, max = 64)
+    @Column(name = "pr_name")
     private String pr_name;
 
-//    @NotEmpty
-//    @NotBlank
-//    @NotNull
-//    @Column(name = "pr_address", unique = true, length = 128)
-    @Column(name = "pr_address", length = 128)
+    @NotEmpty
+    @NotBlank
+    @NotNull
+    @Size(min = 1, max = 128)
+    @Column(name = "pr_address")
     private String pr_address;
 
-//    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "pizzeria_pizza", joinColumns = @JoinColumn(name = "pizzeria_id"),
             inverseJoinColumns = @JoinColumn(name = "pizza_id"))

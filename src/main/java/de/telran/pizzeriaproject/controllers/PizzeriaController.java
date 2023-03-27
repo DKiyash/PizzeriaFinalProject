@@ -4,6 +4,7 @@ import de.telran.pizzeriaproject.domain.Pizzeria;
 import de.telran.pizzeriaproject.exeptions.PizzaNotFoundException;
 import de.telran.pizzeriaproject.exeptions.PizzeriaNotFoundException;
 import de.telran.pizzeriaproject.services.PizzeriaSersice;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,7 @@ public class PizzeriaController {
 
     //Создание новой пиццерии
     @PostMapping()
-    ResponseEntity<?> createPizzeria(@RequestBody Pizzeria newPizzeria) {
+    ResponseEntity<?> createPizzeria(@Valid @RequestBody Pizzeria newPizzeria) {
         try {
             //Попробовать создать пиццерию
             Pizzeria pizzeria = pizzeriaSersice.save(newPizzeria);
@@ -76,7 +77,7 @@ public class PizzeriaController {
 
     //Обновление существующей пиццерии
     @PutMapping("/{id}")
-    ResponseEntity<?> updatePizzeriaById(@PathVariable Long id, @RequestBody Pizzeria newPizzeria) {
+    ResponseEntity<?> updatePizzeriaById(@PathVariable Long id, @Valid @RequestBody Pizzeria newPizzeria) {
         try {
             //Попробовать обновить пиццерию
             Pizzeria updatedPizzeria = pizzeriaSersice.updatePizzeriaById(id, newPizzeria);
@@ -87,16 +88,6 @@ public class PizzeriaController {
             return ResponseEntity.notFound().build();
         }
     }
-//    @PutMapping("/{id}")
-//    ResponseEntity<?> updatePizzeriaById(@PathVariable Long id, @RequestBody Pizzeria newPizzeria) {
-//        //Если пиццерия есть в БД, то обновить ее
-//        if (pizzeriaSersice.existsById(id)) {
-//            Pizzeria pizzeria = pizzeriaSersice.save(newPizzeria);
-//            return ResponseEntity.ok(pizzeria);
-//        }
-//        //Если пиццерии нет в БД, то вернуть "NOT_FOUND"
-//        else return ResponseEntity.notFound().build();
-//    }
 
     //Удаление пиццерии по ID
     @DeleteMapping(value = "/{id}")
@@ -108,14 +99,6 @@ public class PizzeriaController {
         } catch (PizzeriaNotFoundException e) {//Если пиццерии нет в БД, то вернуть "NOT_FOUND"
             return ResponseEntity.notFound().build();
         }
-//        //Если пиццерия есть в БД, то удалить ее
-//        if (pizzeriaSersice.existsById(id)) {
-//            pizzeriaSersice.deleteById(id);
-//            log.warn("Pizzeria deleted");
-//            return ResponseEntity.ok().build();
-//        }
-//        //Если пиццерии нет в БД, то вернуть "NOT_FOUND"
-//        else return ResponseEntity.notFound().build();
     }
 
 }

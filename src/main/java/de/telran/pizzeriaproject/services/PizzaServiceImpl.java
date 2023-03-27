@@ -23,6 +23,7 @@ public class PizzaServiceImpl implements PizzaSersice {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Pizza save(Pizza newPizza) {
+        newPizza.setP_id(0L);//Что-бы метод не обновил существующую пиццерию
         return pizzaRepositories.save(newPizza);
     }
 
