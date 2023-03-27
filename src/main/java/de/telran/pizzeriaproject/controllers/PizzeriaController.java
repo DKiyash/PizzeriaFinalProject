@@ -41,26 +41,23 @@ public class PizzeriaController {
     ResponseEntity<?> createPizzeria(@RequestBody Pizzeria newPizzeria) {
         try {
             //Попробовать создать пиццерию
-            pizzeriaSersice.save(newPizzeria);
+            Pizzeria pizzeria = pizzeriaSersice.save(newPizzeria);
+            //Если новая пиццерия добавлена, то вернуть код 201 и location (ссылку на пиццерию)
             log.info("New Pizzeria added successfully");
-            return ResponseEntity.ok(newPizzeria);
+            if (pizzeria != null) {
+                URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                        .path("/{id}")
+                        .buildAndExpand(pizzeria.getPr_id())
+                        .toUri();
+                return ResponseEntity.created(location).body(pizzeria.getPr_id());
+            }
+            //Если новая пицца не добавлена, то вернуть "500 Internal Server Error"
+            else {
+                return ResponseEntity.internalServerError().build();
+            }
         } catch (PizzaNotFoundException e) {//Если список пицц некорректный, то вернуть "NOT_FOUND"
             return ResponseEntity.notFound().build();
         }
-//        //Если новая пиццерия добавлена, то вернуть код 201 и location (ссылку на пиццерию)
-//        Pizzeria pizzeria = pizzeriaSersice.save(newPizzeria);
-//        if (pizzeria != null) {
-//            log.info("New Pizzeria added successfully");
-//            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-//                    .path("/{id}")
-//                    .buildAndExpand(pizzeria.getPr_id())
-//                    .toUri();
-//            return ResponseEntity.created(location).build();
-//        }
-//        //Если новая пиццерия не добавлена, то вернуть "500 Internal Server Error"
-//        else {
-//            return ResponseEntity.internalServerError().build();
-//        }
     }
 
 
@@ -69,7 +66,7 @@ public class PizzeriaController {
     ResponseEntity<?> getPizzeriaById(@PathVariable Long id) {
         Optional<Pizzeria> result = pizzeriaSersice.findById(id);
         //Если пиццерия есть, то вернуть ее
-        if (result.isPresent()){
+        if (result.isPresent()) {
             Pizzeria pizzeria = result.get();
             return ResponseEntity.ok(pizzeria);
         }

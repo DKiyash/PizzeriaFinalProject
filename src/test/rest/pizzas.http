@@ -1,0 +1,8 @@
+### Get all pizzas
+GET http://localhost:8080//api/v1/pizzas
+
+### Get pizza by id
+GET http://localhost:8080//api/v1/pizzas/1
+
+### Get pizza by id
+GET http://localhost:8080//api/v1/pizzas/6

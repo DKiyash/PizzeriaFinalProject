@@ -47,7 +47,7 @@ public class PizzaController {
                     .path("/{id}")
                     .buildAndExpand(pizza.getP_id())
                     .toUri();
-            return ResponseEntity.created(location).build();
+            return ResponseEntity.created(location).body(pizza.getP_id());
         }
         //Если новая пицца не добавлена, то вернуть "500 Internal Server Error"
         else {
