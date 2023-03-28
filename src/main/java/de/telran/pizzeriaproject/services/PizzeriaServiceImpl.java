@@ -2,10 +2,12 @@ package de.telran.pizzeriaproject.services;
 
 import de.telran.pizzeriaproject.domain.Pizza;
 import de.telran.pizzeriaproject.domain.Pizzeria;
+import de.telran.pizzeriaproject.exeptions.DuplicateEntryException;
 import de.telran.pizzeriaproject.exeptions.PizzaNotFoundException;
 import de.telran.pizzeriaproject.exeptions.PizzeriaNotFoundException;
 import de.telran.pizzeriaproject.repositories.PizzaRepositories;
 import de.telran.pizzeriaproject.repositories.PizzeriaRepositories;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,8 +30,8 @@ public class PizzeriaServiceImpl implements PizzeriaSersice {
 
     //Создание или обновление пиццерии
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Pizzeria save(Pizzeria newPizzeria) throws PizzaNotFoundException{
+    @Transactional
+    public Pizzeria save(Pizzeria newPizzeria) throws PizzaNotFoundException, DuplicateEntryException{
         //Проверяем список пицц в сохраняемой пиццерии
         Set<Pizza> pizzaSet = newPizzeria.getPizzaSet();
         //Если список не пустой, то проверяем все ли пиццы из существующего списка пицц
@@ -41,7 +43,13 @@ public class PizzeriaServiceImpl implements PizzeriaSersice {
         }
         //Если все пиццы в списке существуют или список пустой, то создаем/обновляем пиццерию
         newPizzeria.setPr_id(0L);//Что-бы метод не обновил существующую пиццерию
-        return pizzeriaRepositories.save(newPizzeria);
+        //Перехватываем DataIntegrityViolationException, которое появляется
+        //при попытке сохранения сущности с одинаковыми параметрами
+        try{
+            return pizzeriaRepositories.save(newPizzeria);
+        } catch (DataIntegrityViolationException e){
+            throw  new DuplicateEntryException("Пиццерия с такими параметрами уже существует");
+        }
     }
 
     //Получение списка всех пиццерий постранично
@@ -60,7 +68,7 @@ public class PizzeriaServiceImpl implements PizzeriaSersice {
 
     //Обновление данных о пиццерии
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public Pizzeria updatePizzeriaById(Long id, Pizzeria newPizzeria) throws PizzeriaNotFoundException, PizzaNotFoundException {
         //Проверяем, есть ли пиццерия в БД, если нет - выбрасываем exception
         pizzeriaRepositories.findById(id)
@@ -73,7 +81,7 @@ public class PizzeriaServiceImpl implements PizzeriaSersice {
 
     //Удаление пиццерии
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void deleteById(Long id) throws PizzeriaNotFoundException{
         //Проверяем, есть ли пиццерия в БД, если нет - выбрасываем exception
         pizzeriaRepositories.findById(id)

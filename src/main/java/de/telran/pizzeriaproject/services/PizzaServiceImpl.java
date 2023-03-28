@@ -1,9 +1,10 @@
 package de.telran.pizzeriaproject.services;
 
 import de.telran.pizzeriaproject.domain.Pizza;
+import de.telran.pizzeriaproject.exeptions.DuplicateEntryException;
 import de.telran.pizzeriaproject.exeptions.PizzaNotFoundException;
-import de.telran.pizzeriaproject.exeptions.PizzeriaNotFoundException;
 import de.telran.pizzeriaproject.repositories.PizzaRepositories;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,10 +23,16 @@ public class PizzaServiceImpl implements PizzaSersice {
 
     //Создание или обновление пиццы
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Pizza save(Pizza newPizza) {
+    @Transactional
+    public Pizza save(Pizza newPizza) throws DuplicateEntryException {
         newPizza.setP_id(0L);//Что-бы метод не обновил существующую пиццерию
-        return pizzaRepositories.save(newPizza);
+        //Перехватываем DataIntegrityViolationException, которое появляется
+        //при попытке сохранения сущности с одинаковыми параметрами
+        try{
+            return pizzaRepositories.save(newPizza);
+        } catch (DataIntegrityViolationException e){
+            throw  new DuplicateEntryException("Пицца с такими параметрами уже существует");
+        }
     }
 
     //Получение списка всех пицц постранично (используется в контроллере)
@@ -51,7 +58,7 @@ public class PizzaServiceImpl implements PizzaSersice {
 
     //Обновление данных о пицце
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public Pizza updatePizzaById(Long id, Pizza newPizza) throws PizzaNotFoundException{
         //Проверяем, есть ли пицца в БД, если нет - выбрасываем exception
         pizzaRepositories.findById(id)
@@ -63,7 +70,7 @@ public class PizzaServiceImpl implements PizzaSersice {
     }
     //Удаление пиццы
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void deleteById(Long id) throws PizzaNotFoundException{
         //Проверяем, есть ли пицца в БД, если нет - выбрасываем exception
         pizzaRepositories.findById(id)

@@ -43,11 +43,11 @@ public class RestExceptionHandler {
     }
 
     //Обработка иключений при валидации (unique)
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    protected ResponseEntity<ProblemDetail> handleUniqueNotValid(DataIntegrityViolationException e) {
+    @ExceptionHandler(DuplicateEntryException.class)
+    protected ResponseEntity<ProblemDetail> handleUniqueNotValid(DuplicateEntryException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
-        problemDetail.setTitle(e.getMessage());
-        problemDetail.setDetail("Duplicate entry");
+        problemDetail.setTitle("Duplicate entry");
+        problemDetail.setDetail(e.getMessage());
         problemDetail.setType(URI.create("https://api.documents.com/errors/unprocessable_entity"));
         problemDetail.setProperty("timestamp", Instant.now());
         problemDetail.setProperty("traceId", MDC.get("traceId"));
