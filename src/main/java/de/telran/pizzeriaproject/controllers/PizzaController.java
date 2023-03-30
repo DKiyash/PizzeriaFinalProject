@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -83,7 +82,7 @@ public class PizzaController {
     @DeleteMapping(value = "/{id}")
     ResponseEntity<?> deletePizzaById(@PathVariable Long id) {
         try {
-            //Попробовать удалить пиццерию
+            //Попробовать удалить пиццу
             pizzaSersice.deleteById(id);
             return ResponseEntity.ok().build();
         } catch (PizzaNotFoundException e) {//Если пиццы нет в БД, то вернуть "NOT_FOUND"

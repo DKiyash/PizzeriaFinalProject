@@ -61,7 +61,7 @@ class PizzaControllerTest {
                 new Pizza("Pizza name_02", "Description_02", 10.00, "url_02"));
         Page<Pizza> pizzaPage = new PageImpl<>(pizzas, pageable, pizzas.size());
 
-        Mockito.when(pizzaSersice.findAll(pageable)).thenReturn(pizzaPage);
+        Mockito.when(pizzaSersice.findAll(Mockito.any())).thenReturn(pizzaPage);
 
         mockMvc.perform(MockMvcRequestBuilders.get(API_PATH + ""))
                 .andExpect(status().isOk())
