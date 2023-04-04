@@ -75,8 +75,22 @@ public class PizzeriaServiceImpl implements PizzeriaSersice {
                 .orElseThrow(() -> new PizzeriaNotFoundException("Pizzeria not found for id: " + id));
         //Устанавливаем id полученный из пути (вдруг в теле другой id, чтобы не была создана новая пиццерия)
         newPizzeria.setPr_id(id);
-        //Обновляем данные о пиццерии
-        return save(newPizzeria);
+        //Проверяем список пицц в сохраняемой пиццерии
+        Set<Pizza> pizzaSet = newPizzeria.getPizzaSet();
+        //Если список не пустой, то проверяем все ли пиццы из существующего списка пицц
+        if(!pizzaSet.isEmpty()){
+            for (Pizza pz:pizzaSet) {
+                pizzaRepositories.findById(pz.getP_id())
+                        .orElseThrow(() -> new PizzaNotFoundException("Pizza not found for id: " + pz.getP_id()));
+            }
+        }
+        //Перехватываем DataIntegrityViolationException, которое появляется
+        //при попытке сохранения сущности с одинаковыми параметрами
+        try{
+            return pizzeriaRepositories.save(newPizzeria);
+        } catch (DataIntegrityViolationException e){
+            throw  new DuplicateEntryException("Пиццерия с такими параметрами уже существует");
+        }
     }
 
     //Удаление пиццерии

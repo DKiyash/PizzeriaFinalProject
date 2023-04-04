@@ -29,7 +29,7 @@ public class PizzeriaController {
 
     //Получение списка всех пиццерий
     @GetMapping()
-    ResponseEntity<?> getAllPizzeria(Pageable pageable) {
+    ResponseEntity<?> getAllPizzerias(Pageable pageable) {
         Iterable<Pizzeria> pizzeriaList = pizzeriaSersice.findAll(pageable);
         return ResponseEntity.ok(pizzeriaList);
     }
