@@ -1,15 +1,21 @@
 package de.telran.pizzeriaproject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+
+import javax.sql.DataSource;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
+//@TestPropertySource(locations = "classpath:application-test.properties")
 public abstract class IntegrationTestsInfrastructureInitializer {
     @Autowired
     protected MockMvc mockMvc;
@@ -17,6 +23,17 @@ public abstract class IntegrationTestsInfrastructureInitializer {
     @Autowired
     protected ObjectMapper objectMapper;
 
+//    @Autowired
+//    DataSource dataSource;
+//
+//    @BeforeAll
+//    public void migrateDatabase() {
+//        Flyway flyway = Flyway.configure()
+//                .dataSource(dataSource)
+//                .locations("classpath:/db/migration")
+//                .load();
+//        flyway.migrate();
+//    }
         /*
     <dependency>
         <groupId>org.testcontainers</groupId>

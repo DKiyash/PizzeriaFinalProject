@@ -82,6 +82,38 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <from>
+                        <image>openjdk:17-jdk-slim</image>
+                        <auth>
+                            <username>${docker-hub.username}</username>
+                            <password>${docker-hub.password}</password>
+                        </auth>
+                    </from>
+                    <to>
+                        <image>docker.io/dkiyash/pizzeria_project:${project.version}</image>
+                        <auth>
+                            <username>${docker-hub.username}</username>
+                            <password>${docker-hub.password}</password>
+                        </auth>
+                    </to>
+                    <container>
+                        <jvmFlags>
+                            <jvmFlag>-server</jvmFlag>
+                            <jvmFlag>-Xms512m</jvmFlag>
+                            <jvmFlag>-Ddocuments-count-task.interval-sec=30</jvmFlag>
+                        </jvmFlags>
+                        <ports>
+                            <port>8080</port>
+                        </ports>
+                    </container>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
