@@ -3,6 +3,12 @@ package de.telran.pizzeriaproject.controllers;
 import de.telran.pizzeriaproject.domain.Pizza;
 import de.telran.pizzeriaproject.exeptions.PizzaNotFoundException;
 import de.telran.pizzeriaproject.services.PizzaSersice;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +32,15 @@ public class PizzaController {
     }
 
     //Получение списка всех пицц
+    @Operation(summary = "Get all Pizzas")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the Pizzas",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Pizza.class))})
+    })
     @GetMapping()
-    ResponseEntity<?> getAllPizzas(Pageable pageable) {
+    ResponseEntity<?> getAllPizzas(@Parameter(description = "Page parameters, example: {\"page\":0, \"size\":5}")
+                                   Pageable pageable) {
         Iterable<Pizza> pizzaList = pizzaSersice.findAll(pageable);
             return ResponseEntity.ok(pizzaList);
     }
@@ -53,6 +66,13 @@ public class PizzaController {
 
 
     //Получение пиццы по ID
+    @Operation(summary = "Get a Pizza by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the Pizza",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Pizza.class)) }),
+            @ApiResponse(responseCode = "404", description = "Pizza not found",
+                    content = @Content) })
     @GetMapping("/{id}")
     ResponseEntity<?> getPizzaById(@PathVariable Long id) {
         Optional<Pizza> result = pizzaSersice.findById(id);

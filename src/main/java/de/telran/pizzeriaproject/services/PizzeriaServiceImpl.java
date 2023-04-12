@@ -28,7 +28,7 @@ public class PizzeriaServiceImpl implements PizzeriaSersice {
         this.pizzaRepositories = pizzaRepositories;
     }
 
-    //Создание или обновление пиццерии
+    //Создание пиццерии
     @Override
     @Transactional
     public Pizzeria save(Pizzeria newPizzeria) throws PizzaNotFoundException, DuplicateEntryException{
@@ -48,7 +48,7 @@ public class PizzeriaServiceImpl implements PizzeriaSersice {
         try{
             return pizzeriaRepositories.save(newPizzeria);
         } catch (DataIntegrityViolationException e){
-            throw  new DuplicateEntryException("Пиццерия с такими параметрами уже существует");
+            throw  new DuplicateEntryException("Pizzeria with these parameters already exists");
         }
     }
 

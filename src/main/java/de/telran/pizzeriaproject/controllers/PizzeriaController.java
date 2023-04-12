@@ -2,13 +2,21 @@ package de.telran.pizzeriaproject.controllers;
 
 import de.telran.pizzeriaproject.domain.Pizza;
 import de.telran.pizzeriaproject.domain.Pizzeria;
+import de.telran.pizzeriaproject.exeptions.DuplicateEntryException;
 import de.telran.pizzeriaproject.exeptions.PizzaNotFoundException;
 import de.telran.pizzeriaproject.exeptions.PizzeriaNotFoundException;
 import de.telran.pizzeriaproject.services.PizzeriaSersice;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -28,13 +36,28 @@ public class PizzeriaController {
     }
 
     //Получение списка всех пиццерий
+    @Operation(summary = "Get all Pizzerias")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the Pizzerias",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Pizzeria.class))})
+    })
     @GetMapping()
-    ResponseEntity<?> getAllPizzerias(Pageable pageable) {
+    ResponseEntity<?> getAllPizzerias(@Parameter(description = "Page parameters, example: {\"page\":0, \"size\":5}")
+                                      Pageable pageable) {
         Iterable<Pizzeria> pizzeriaList = pizzeriaSersice.findAll(pageable);
         return ResponseEntity.ok(pizzeriaList);
     }
 
     //Создание новой пиццерии
+    @Operation(summary = "Create a new Pizzeria")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created the new Pizzeria",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Pizzeria.class)) }),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error"),
+            @ApiResponse(responseCode = "400", description = "Pizza list is not correct"),
+            @ApiResponse(responseCode = "409", description = "Pizzeria with these parameters already exists")})
     @PostMapping()
     ResponseEntity<?> createPizzeria(@Valid @RequestBody Pizzeria newPizzeria) {
         try {
@@ -53,15 +76,25 @@ public class PizzeriaController {
             else {
                 return ResponseEntity.internalServerError().build();
             }
-        } catch (PizzaNotFoundException e) {//Если список пицц некорректный, то вернуть "NOT_FOUND"
-            return ResponseEntity.notFound().build();
+        } catch (PizzaNotFoundException e) {//Если список пицц некорректный, то вернуть "BAD_REQUEST"
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        catch (DuplicateEntryException e) {//Если Пиццерия с такими параметрами уже существует, то вернуть "CONFLICT"
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 
 
     //Получение пиццерии по ID
+    @Operation(summary = "Get a Pizzeria by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the Pizzeria",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Pizzeria.class)) }),
+            @ApiResponse(responseCode = "404", description = "Pizzeria not found",
+                    content = @Content) })
     @GetMapping("/{id}")
-    ResponseEntity<?> getPizzeriaById(@PathVariable Long id) {
+    ResponseEntity<?> getPizzeriaById(@Parameter(description = "id of Pizzeria to be searched") @PathVariable Long id) {
         Optional<Pizzeria> result = pizzeriaSersice.findById(id);
         //Если пиццерия есть, то вернуть ее
         if (result.isPresent()) {
