@@ -43,7 +43,7 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
 
     @Nested
     @DisplayName("Создание новой пиццерии")
-    class createPizzeriaByIdTest {
+    class CreateNewPizzeriaTest {
         @Test
         @DisplayName("Успешное создание новой пиццерии (без списка пицц)")
         void createPizzeria_WithoutPizzaList_returnIdCreatedPizzeriaAndLocationAndStatus201() throws Exception {
@@ -143,9 +143,6 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
         @Test
         @DisplayName("Нельзя создать новую пиццерию, если пиццерия с такими параметрами уже существует")
         void createPizzeria_WithDuplicateEntryException_returnStatus409() throws Exception {
-            //Создание случайной строки, т.к. некоторые поля должны быть unique иначе ошибка
-            String generatedString = randomString();
-
             //Создаем объект пиццерия (пицца с такими параметрами уже должна быть в базе)
             Pizzeria newPizzeria = new Pizzeria();
             newPizzeria.setPr_id(Mockito.any());
@@ -215,7 +212,7 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
     //Тестирование метода updatePizzeriaById (Обновление существующей пиццерии по ID)
     @Nested
     @DisplayName("Обновление пиццерии по id=3, id=4")
-    class updatePizzeriaByIdTest {
+    class UpdatePizzeriaByIdTest {
         @Test
         @DisplayName("Успешное обновление пиццерии по id=3 (без списка пицц)")
         void updatePizzeriaById_WithoutPizzaList_returnPizzeriaAndStatus200() throws Exception {
@@ -273,7 +270,7 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
 
         @Test
         @DisplayName("Нельзя обновить пиццерию по id=4, если указанных пицц нет в списке пицц")
-        void updatePizzeriaById_WithWrongPizzaList_returnStatus404() throws Exception {
+        void updatePizzeriaById_WithWrongPizzaList_returnStatus400() throws Exception {
             Long id = 4L;
             //Создаем объект пиццерия с измененными параметрами
             Pizzeria newPizzeria = new Pizzeria();
@@ -295,7 +292,7 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
                             .content(objectMapper.writeValueAsString(newPizzeria))
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(MockMvcResultHandlers.print())
-                    .andExpect(status().isNotFound());
+                    .andExpect(status().isBadRequest());
         }
 
         @Test
@@ -320,7 +317,7 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
     //Тестирование метода deletePizzeriaById (Удаление пиццерии по ID)
     @Nested
     @DisplayName("Удаление пиццерии по id=1")
-    class deletePizzeriaByIdTest {
+    class DeletePizzeriaByIdTest {
         @Test
         @DisplayName("Успешное удаление пиццерии по id=1")
         void deletePizzeriaById_returnStatus200() throws Exception {

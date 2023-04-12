@@ -3,6 +3,7 @@ package de.telran.pizzeriaproject.services;
 import de.telran.pizzeriaproject.domain.Pizza;
 import de.telran.pizzeriaproject.exeptions.DuplicateEntryException;
 import de.telran.pizzeriaproject.exeptions.PizzaNotFoundException;
+import de.telran.pizzeriaproject.exeptions.PizzeriaNotFoundException;
 import de.telran.pizzeriaproject.repositories.PizzaRepositories;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class PizzaServiceImpl implements PizzaSersice {
@@ -25,13 +27,13 @@ public class PizzaServiceImpl implements PizzaSersice {
     @Override
     @Transactional
     public Pizza save(Pizza newPizza) throws DuplicateEntryException {
-        newPizza.setP_id(0L);//Что-бы метод не обновил существующую пиццерию
+        newPizza.setP_id(0L);//Что-бы метод не обновил существующую пиццу
         //Перехватываем DataIntegrityViolationException, которое появляется
         //при попытке сохранения сущности с одинаковыми параметрами
         try{
             return pizzaRepositories.save(newPizza);
         } catch (DataIntegrityViolationException e){
-            throw  new DuplicateEntryException("Пицца с такими параметрами уже существует");
+            throw  new DuplicateEntryException("Pizza with these parameters already exists");
         }
     }
 
@@ -59,14 +61,22 @@ public class PizzaServiceImpl implements PizzaSersice {
     //Обновление данных о пицце
     @Override
     @Transactional
-    public Pizza updatePizzaById(Long id, Pizza newPizza) throws PizzaNotFoundException{
+    public Pizza updatePizzaById(Long id, Pizza newPizza) throws PizzaNotFoundException, DuplicateEntryException {
         //Проверяем, есть ли пицца в БД, если нет - выбрасываем exception
         pizzaRepositories.findById(id)
                 .orElseThrow(() -> new PizzaNotFoundException("Pizza not found for id: " + id));
         //Устанавливаем id полученный из пути (вдруг в теле другой id, чтобы не была создана новая пицца)
         newPizza.setP_id(id);
-        //Обновляем данные о пицце
         return pizzaRepositories.save(newPizza);
+
+        //ЭТО ПОЧЕМУ-ТО НЕ РАБОТАЕТ (можно перехватить только уже в контроллере, там работает!!!)
+////        Перехватываем DataIntegrityViolationException, которое появляется
+////        при попытке сохранения сущности с одинаковыми параметрами
+//        try{
+//            return pizzaRepositories.save(newPizza);
+//        } catch (DataIntegrityViolationException e){
+//            throw  new DuplicateEntryException("Pizza with these parameters already exists");
+//        }
     }
     //Удаление пиццы
     @Override

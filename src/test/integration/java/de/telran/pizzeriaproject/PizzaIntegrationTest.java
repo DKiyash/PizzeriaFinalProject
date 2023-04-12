@@ -1,6 +1,7 @@
 package de.telran.pizzeriaproject;
 
 import de.telran.pizzeriaproject.domain.Pizza;
+import de.telran.pizzeriaproject.domain.Pizzeria;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,45 +41,73 @@ public class PizzaIntegrationTest extends IntegrationTestsInfrastructureInitiali
     }
 
     //Тестирование метода createPizza (Создание новой пиццы)
-    @Test
-    @DisplayName("Успешное создание новой пиццы")
-    void createPizza_returnIdCreatedPizzaAndLocationAndStatus201() throws Exception {
-        //Создание случайной строки, т.к. некоторые поля должны быть unique иначе ошибка
-        int leftLimit = 97; // letter 'a'
-        int rightLimit = 122; // letter 'z'
-        int targetStringLength = 10;
-        Random random = new Random();
-        StringBuilder buffer = new StringBuilder(targetStringLength);
-        for (int i = 0; i < targetStringLength; i++) {
-            int randomLimitedInt = leftLimit + (int)
-                    (random.nextFloat() * (rightLimit - leftLimit + 1));
-            buffer.append((char) randomLimitedInt);
+    @Nested
+    @DisplayName("Создание новой пиццы")
+    class CreateNewPizzaByIdTest {
+        @Test
+        @DisplayName("Успешное создание новой пиццы")
+        void createPizza_returnIdCreatedPizzaAndLocationAndStatus201() throws Exception {
+            //Создание случайной строки, т.к. некоторые поля должны быть unique иначе ошибка
+            String generatedString = randomString();
+
+            //Создаем новый объект пицца (которого нет в базе)
+            Pizza newPizza = new Pizza();
+            newPizza.setP_id(Mockito.any());
+            newPizza.setP_name("Pizza_name_" + generatedString);
+            newPizza.setP_description("Description_" + generatedString);
+            newPizza.setP_base_price(10.0);
+            newPizza.setP_photo_link("url");
+
+            MvcResult result=mockMvc.perform(MockMvcRequestBuilders.post(API_PATH + "")
+                            .with(httpBasic("admin","admin"))
+                            .content(objectMapper.writeValueAsString(newPizza))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isCreated())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andReturn();
+            //Проверяем что в теле ответа пришел id новой пиццы
+            String content_body = result.getResponse().getContentAsString();
+            assertThat(content_body).isNotEmpty().isNotBlank().isNotNull();
+
+            //Проверяем что location пришла корректно (Потом скорректировать начало пути http://localhost !!!)
+            String content_location = result.getResponse().getHeader("Location");
+            assertThat(content_location).isEqualTo("http://localhost" + API_PATH + "/" + content_body);
         }
-        String generatedString = buffer.toString();
 
-        //Создаем новый объект пицца (которого нет в базе)
-        Pizza newPizza = new Pizza();
-        newPizza.setP_id(Mockito.any());
-        newPizza.setP_name("Pizza_name_" + generatedString);
-        newPizza.setP_description("Description_" + generatedString);
-        newPizza.setP_base_price(10.0);
-        newPizza.setP_photo_link("url");
+        @Test
+        @DisplayName("Нельзя создать новую пиццу, если пицца с такими параметрами уже существует")
+        void createPizza_WithDuplicateEntryException_returnStatus409() throws Exception {
+            //Создаем объект пицца (пицца с такими параметрами уже должна быть в базе)
+            Pizza newPizza = new Pizza();
+            newPizza.setP_id(Mockito.any());
+            newPizza.setP_name("Pizza_name_02");
+            newPizza.setP_description("Description_02");
+            newPizza.setP_base_price(10.0);
+            newPizza.setP_photo_link("url_02");
 
-        MvcResult result=mockMvc.perform(MockMvcRequestBuilders.post(API_PATH + "")
-                        .with(httpBasic("admin","admin"))
-                        .content(objectMapper.writeValueAsString(newPizza))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-        //Проверяем что в теле ответа пришел id новой пиццы
-        String content_body = result.getResponse().getContentAsString();
-        assertThat(content_body).isNotEmpty().isNotBlank().isNotNull();
+            mockMvc.perform(MockMvcRequestBuilders.post(API_PATH + "")
+                            .with(httpBasic("admin","admin"))
+                            .content(objectMapper.writeValueAsString(newPizza))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isConflict());
+        }
 
-        //Проверяем что location пришла корректно (Потом скорректировать начало пути http://localhost !!!)
-        String content_location = result.getResponse().getHeader("Location");
-        assertThat(content_location).isEqualTo("http://localhost" + API_PATH + "/" + content_body);
+        //Метод для генерации случайной строки
+        String randomString(){
+            int leftLimit = 97; // letter 'a'
+            int rightLimit = 122; // letter 'z'
+            int targetStringLength = 10;//Длина генерируемой строки
+            Random random = new Random();
+            StringBuilder buffer = new StringBuilder(targetStringLength);
+            for (int i = 0; i < targetStringLength; i++) {
+                int randomLimitedInt = leftLimit + (int)
+                        (random.nextFloat() * (rightLimit - leftLimit + 1));
+                buffer.append((char) randomLimitedInt);
+            }
+            return buffer.toString();
+        }
     }
 
     //Тестирование метода GetPizzaByIdTest (Получение пиццы по ID)
@@ -138,6 +167,26 @@ public class PizzaIntegrationTest extends IntegrationTestsInfrastructureInitiali
                     .andExpect(jsonPath("$.p_description").value(newPizza.getP_description()))
                     .andExpect(jsonPath("$.p_base_price").value(newPizza.getP_base_price()))
                     .andExpect(jsonPath("$.p_photo_link").value(newPizza.getP_photo_link()));
+        }
+
+        @Test
+        @DisplayName("Нельзя обновить  пиццу, если пицца с такими параметрами уже существует")
+        void updatePizza_WithDuplicateEntryException_returnStatus409() throws Exception {
+            Long id = 3L;
+            //Создаем объект пицца (пицца с такими параметрами уже должна быть в базе)
+            Pizza newPizza = new Pizza();
+            newPizza.setP_id(Mockito.any());
+            newPizza.setP_name("Pizza_name_02");
+            newPizza.setP_description("Description_02");
+            newPizza.setP_base_price(11.0);
+            newPizza.setP_photo_link("url_02");
+
+            mockMvc.perform(MockMvcRequestBuilders.put(API_PATH + "/{id}", id)
+                            .with(httpBasic("admin","admin"))
+                            .content(objectMapper.writeValueAsString(newPizza))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isConflict());
         }
 
         @Test

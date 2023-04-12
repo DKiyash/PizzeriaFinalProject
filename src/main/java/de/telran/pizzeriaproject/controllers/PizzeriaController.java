@@ -61,9 +61,9 @@ public class PizzeriaController {
     @PostMapping()
     ResponseEntity<?> createPizzeria(@Valid @RequestBody Pizzeria newPizzeria) {
         try {
-            //Попробовать создать пиццерию
+            //Попробовать создать новую пиццерию
             Pizzeria pizzeria = pizzeriaSersice.save(newPizzeria);
-            //Если новая пиццерия добавлена, то вернуть код 201 и location (ссылку на пиццерию)
+            //Если новая пиццерия добавлена, то вернуть код 201 и location (ссылку на новую пиццерию)
             log.info("New Pizzeria added successfully");
             if (pizzeria != null) {
                 URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -72,14 +72,13 @@ public class PizzeriaController {
                         .toUri();
                 return ResponseEntity.created(location).body(pizzeria.getPr_id());
             }
-            //Если новая пицца не добавлена, то вернуть "500 Internal Server Error"
+            //Если новая пиццерия не добавлена, то вернуть "500 Internal Server Error"
             else {
                 return ResponseEntity.internalServerError().build();
             }
         } catch (PizzaNotFoundException e) {//Если список пицц некорректный, то вернуть "BAD_REQUEST"
             return ResponseEntity.badRequest().body(e.getMessage());
-        }
-        catch (DuplicateEntryException e) {//Если Пиццерия с такими параметрами уже существует, то вернуть "CONFLICT"
+        } catch (DuplicateEntryException e) {//Если Пиццерия с такими параметрами уже существует, то вернуть "CONFLICT"
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
@@ -91,8 +90,7 @@ public class PizzeriaController {
             @ApiResponse(responseCode = "200", description = "Found the Pizzeria",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Pizzeria.class)) }),
-            @ApiResponse(responseCode = "404", description = "Pizzeria not found",
-                    content = @Content) })
+            @ApiResponse(responseCode = "404", description = "Pizzeria not found") })
     @GetMapping("/{id}")
     ResponseEntity<?> getPizzeriaById(@Parameter(description = "id of Pizzeria to be searched") @PathVariable Long id) {
         Optional<Pizzeria> result = pizzeriaSersice.findById(id);
@@ -106,22 +104,40 @@ public class PizzeriaController {
     }
 
     //Обновление существующей пиццерии
+    @Operation(summary = "Update a Pizzeria по Id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Updated the Pizzeria",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Pizzeria.class)) }),
+            @ApiResponse(responseCode = "404", description = "Pizzeria is not found"),
+            @ApiResponse(responseCode = "400", description = "Pizza list is not correct"),
+            @ApiResponse(responseCode = "409", description = "Pizzeria with these parameters already exists")})
     @PutMapping("/{id}")
-    ResponseEntity<?> updatePizzeriaById(@PathVariable Long id, @Valid @RequestBody Pizzeria newPizzeria) {
+    ResponseEntity<?> updatePizzeriaById(@Parameter(description = "id of Pizzeria to be searched")
+                                         @PathVariable Long id, @Valid @RequestBody Pizzeria newPizzeria) {
         try {
             //Попробовать обновить пиццерию
             Pizzeria updatedPizzeria = pizzeriaSersice.updatePizzeriaById(id, newPizzeria);
             return ResponseEntity.ok(updatedPizzeria);
         } catch (PizzeriaNotFoundException e) {//Если пиццерии нет в списке пицерий, то вернуть "NOT_FOUND"
             return ResponseEntity.notFound().build();
-        } catch (PizzaNotFoundException e) {//Если список пицц некорректный, то вернуть "NOT_FOUND"
-            return ResponseEntity.notFound().build();
+        } catch (PizzaNotFoundException e) {//Если список пицц некорректный, то вернуть "BAD_REQUEST"
+            return ResponseEntity.badRequest().build();
+        } catch (DuplicateEntryException e) {//Если Пиццерия с такими параметрами уже существует, то вернуть "CONFLICT"
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 
     //Удаление пиццерии по ID
+    @Operation(summary = "Delete a Pizzeria by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Deleted the Pizzeria",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Pizzeria.class)) }),
+            @ApiResponse(responseCode = "404", description = "Pizzeria not found") })
     @DeleteMapping(value = "/{id}")
-    ResponseEntity<?> deletePizzeriaById(@PathVariable Long id) {
+    ResponseEntity<?> deletePizzeriaById(@Parameter(description = "id of Pizzeria to be searched")
+                                         @PathVariable Long id) {
         try {
             //Попробовать удалить пиццерию
             pizzeriaSersice.deleteById(id);

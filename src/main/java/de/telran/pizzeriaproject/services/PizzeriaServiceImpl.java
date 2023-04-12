@@ -9,7 +9,6 @@ import de.telran.pizzeriaproject.repositories.PizzaRepositories;
 import de.telran.pizzeriaproject.repositories.PizzeriaRepositories;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,7 +68,8 @@ public class PizzeriaServiceImpl implements PizzeriaSersice {
     //Обновление данных о пиццерии
     @Override
     @Transactional
-    public Pizzeria updatePizzeriaById(Long id, Pizzeria newPizzeria) throws PizzeriaNotFoundException, PizzaNotFoundException {
+    public Pizzeria updatePizzeriaById(Long id, Pizzeria newPizzeria)
+            throws PizzeriaNotFoundException, PizzaNotFoundException, DuplicateEntryException {
         //Проверяем, есть ли пиццерия в БД, если нет - выбрасываем exception
         pizzeriaRepositories.findById(id)
                 .orElseThrow(() -> new PizzeriaNotFoundException("Pizzeria not found for id: " + id));
@@ -89,7 +89,7 @@ public class PizzeriaServiceImpl implements PizzeriaSersice {
         try{
             return pizzeriaRepositories.save(newPizzeria);
         } catch (DataIntegrityViolationException e){
-            throw  new DuplicateEntryException("Пиццерия с такими параметрами уже существует");
+            throw  new DuplicateEntryException("Pizzeria with these parameters already exists");
         }
     }
 
