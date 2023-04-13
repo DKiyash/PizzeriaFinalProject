@@ -1,6 +1,5 @@
 package de.telran.pizzeriaproject.controllers;
 
-import de.telran.pizzeriaproject.domain.Pizza;
 import de.telran.pizzeriaproject.domain.Pizzeria;
 import de.telran.pizzeriaproject.exeptions.DuplicateEntryException;
 import de.telran.pizzeriaproject.exeptions.PizzaNotFoundException;
@@ -14,7 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -109,8 +107,8 @@ public class PizzeriaController {
             @ApiResponse(responseCode = "200", description = "Updated the Pizzeria",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Pizzeria.class)) }),
-            @ApiResponse(responseCode = "404", description = "Pizzeria is not found"),
-            @ApiResponse(responseCode = "400", description = "Pizza list is not correct"),
+            @ApiResponse(responseCode = "404", description = "Pizzeria is not found for id:"),
+            @ApiResponse(responseCode = "400", description = "Pizza is not found for id:"),
             @ApiResponse(responseCode = "409", description = "Pizzeria with these parameters already exists")})
     @PutMapping("/{id}")
     ResponseEntity<?> updatePizzeriaById(@Parameter(description = "id of Pizzeria to be searched")
@@ -119,12 +117,12 @@ public class PizzeriaController {
             //Попробовать обновить пиццерию
             Pizzeria updatedPizzeria = pizzeriaSersice.updatePizzeriaById(id, newPizzeria);
             return ResponseEntity.ok(updatedPizzeria);
-        } catch (PizzeriaNotFoundException e) {//Если пиццерии нет в списке пицерий, то вернуть "NOT_FOUND"
+        } catch (PizzeriaNotFoundException e) {//Если пиццерии нет в списке пиццерий, то вернуть "NOT_FOUND"
             return ResponseEntity.notFound().build();
         } catch (PizzaNotFoundException e) {//Если список пицц некорректный, то вернуть "BAD_REQUEST"
             return ResponseEntity.badRequest().build();
-        } catch (DuplicateEntryException e) {//Если Пиццерия с такими параметрами уже существует, то вернуть "CONFLICT"
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (DataIntegrityViolationException e) {//Если Пиццерия с такими параметрами уже существует, то вернуть "CONFLICT"
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Pizzeria with these parameters already exists");
         }
     }
 

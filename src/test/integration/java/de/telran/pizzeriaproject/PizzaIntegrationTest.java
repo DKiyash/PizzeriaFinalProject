@@ -19,13 +19,13 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-//Интеграционный тест для сущности Пицца (нужно каждый раз удалять и создавать заново БД pizzeria_project в MySQL WorkBench)
+//Интеграционный тест для сущности Пицца.
+//Нужно каждый раз удалять и создавать заново БД pizzeria_project в MySQL WorkBench
+//В тестовой БД 4 пицц:
+//пицца с id=1 используем для запроса по id и не меняем в ней данные ходе тестов
+//пицца с id=2 и 3 используем для update по id, данные в них меняются
+//пицца с id=4 используем для delete по id
 @SpringBootTest
-//@Sql({
-//        "classpath:sql/Create_test_shcema.sql"
-////        "classpath:sql/Create_test_shcema.sql",
-////        "classpath:sql/Test_data.sql"
-//})
 public class PizzaIntegrationTest extends IntegrationTestsInfrastructureInitializer{
 
     static final String API_PATH = "/api/v1/pizzas";
@@ -81,10 +81,10 @@ public class PizzaIntegrationTest extends IntegrationTestsInfrastructureInitiali
             //Создаем объект пицца (пицца с такими параметрами уже должна быть в базе)
             Pizza newPizza = new Pizza();
             newPizza.setP_id(Mockito.any());
-            newPizza.setP_name("Pizza_name_02");
-            newPizza.setP_description("Description_02");
+            newPizza.setP_name("Pizza_name_01");
+            newPizza.setP_description("Description_01");
             newPizza.setP_base_price(10.0);
-            newPizza.setP_photo_link("url_02");
+            newPizza.setP_photo_link("url_01");
 
             mockMvc.perform(MockMvcRequestBuilders.post(API_PATH + "")
                             .with(httpBasic("admin","admin"))
@@ -115,18 +115,18 @@ public class PizzaIntegrationTest extends IntegrationTestsInfrastructureInitiali
     @DisplayName("Получение пиццы по id")
     class GetPizzaByIdTest {
         @Test
-        @DisplayName("Успешное получение пиццы по id=2")
+        @DisplayName("Успешное получение пиццы по id=1")
         void getPizzaById_returnPizzaAndStatus200() throws Exception {
-            Long id = 2L;
+            Long id = 1L;
             mockMvc.perform(MockMvcRequestBuilders.get(API_PATH + "/{id}", id))
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.p_id").value(id))
-                    .andExpect(jsonPath("$.p_name").value("Pizza_name_02"))
-                    .andExpect(jsonPath("$.p_description").value("Description_02"))
-                    .andExpect(jsonPath("$.p_base_price").value("11.0"))
-                    .andExpect(jsonPath("$.p_photo_link").value("url_02"));
+                    .andExpect(jsonPath("$.p_name").value("Pizza_name_01"))
+                    .andExpect(jsonPath("$.p_description").value("Description_01"))
+                    .andExpect(jsonPath("$.p_base_price").value("10.0"))
+                    .andExpect(jsonPath("$.p_photo_link").value("url_01"));
         }
 
         @Test
@@ -141,19 +141,19 @@ public class PizzaIntegrationTest extends IntegrationTestsInfrastructureInitiali
 
     //Тестирование метода updatePizzaById (Обновление существующей пиццы по ID)
     @Nested
-    @DisplayName("Обновление пиццы по id=3")
+    @DisplayName("Обновление пиццы по id=2")
     class updatePizzaByIdTest {
         @Test
-        @DisplayName("Успешное обновление пиццы по id=3")
+        @DisplayName("Успешное обновление пиццы по id=2")
         void updatePizzaById_returnPizzaAndStatus200() throws Exception {
-            Long id = 3L;
+            Long id = 2L;
             //Создаем объект пицца с измененными параметрами
             Pizza newPizza = new Pizza();
             newPizza.setP_id(Mockito.any());
-            newPizza.setP_name("Pizza_name_03_Update");
-            newPizza.setP_description("Description_03_Update");
+            newPizza.setP_name("Pizza_name_02_Update");
+            newPizza.setP_description("Description_02_Update");
             newPizza.setP_base_price(50.0);
-            newPizza.setP_photo_link("url_03_Update");
+            newPizza.setP_photo_link("url_02_Update");
 
             mockMvc.perform(MockMvcRequestBuilders.put(API_PATH + "/{id}", id)
                             .with(httpBasic("admin","admin"))
@@ -170,16 +170,16 @@ public class PizzaIntegrationTest extends IntegrationTestsInfrastructureInitiali
         }
 
         @Test
-        @DisplayName("Нельзя обновить  пиццу, если пицца с такими параметрами уже существует")
+        @DisplayName("Нельзя обновить  пиццу по id=3, если пицца с такими параметрами уже существует")
         void updatePizza_WithDuplicateEntryException_returnStatus409() throws Exception {
             Long id = 3L;
             //Создаем объект пицца (пицца с такими параметрами уже должна быть в базе)
             Pizza newPizza = new Pizza();
             newPizza.setP_id(Mockito.any());
-            newPizza.setP_name("Pizza_name_02");
-            newPizza.setP_description("Description_02");
-            newPizza.setP_base_price(11.0);
-            newPizza.setP_photo_link("url_02");
+            newPizza.setP_name("Pizza_name_01");
+            newPizza.setP_description("Description_01");
+            newPizza.setP_base_price(10.0);
+            newPizza.setP_photo_link("url_01");
 
             mockMvc.perform(MockMvcRequestBuilders.put(API_PATH + "/{id}", id)
                             .with(httpBasic("admin","admin"))
@@ -212,12 +212,12 @@ public class PizzaIntegrationTest extends IntegrationTestsInfrastructureInitiali
 
     //Тестирование метода deletePizzaById (Удаление пиццы по ID)
     @Nested
-    @DisplayName("Удаление пиццы по id=1")
+    @DisplayName("Удаление пиццы по id")
     class deletePizzaByIdTest {
         @Test
-        @DisplayName("Успешное удаление пиццы по id=1")
+        @DisplayName("Успешное удаление пиццы по id=4")
         void deletePizzaById_returnStatus200() throws Exception {
-            Long id = 1L;
+            Long id = 4L;
             mockMvc.perform(MockMvcRequestBuilders.delete(API_PATH + "/{id}", id)
                             .with(httpBasic("admin","admin")))
                     .andDo(MockMvcResultHandlers.print())

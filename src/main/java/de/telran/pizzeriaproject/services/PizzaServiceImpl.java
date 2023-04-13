@@ -61,12 +61,14 @@ public class PizzaServiceImpl implements PizzaSersice {
     //Обновление данных о пицце
     @Override
     @Transactional
-    public Pizza updatePizzaById(Long id, Pizza newPizza) throws PizzaNotFoundException, DuplicateEntryException {
+    public Pizza updatePizzaById(Long id, Pizza newPizza) throws PizzaNotFoundException {
         //Проверяем, есть ли пицца в БД, если нет - выбрасываем exception
         pizzaRepositories.findById(id)
-                .orElseThrow(() -> new PizzaNotFoundException("Pizza not found for id: " + id));
+                .orElseThrow(() -> new PizzaNotFoundException("Pizza is not found for id: " + id));
         //Устанавливаем id полученный из пути (вдруг в теле другой id, чтобы не была создана новая пицца)
         newPizza.setP_id(id);
+        //Пытаемся сохранить новую пиццу, если будет DataIntegrityViolationException,
+        // то перехватываем ее в контроллере
         return pizzaRepositories.save(newPizza);
 
         //ЭТО ПОЧЕМУ-ТО НЕ РАБОТАЕТ (можно перехватить только уже в контроллере, там работает!!!)

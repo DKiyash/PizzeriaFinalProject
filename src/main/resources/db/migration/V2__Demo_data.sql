@@ -9,9 +9,9 @@ values ('Pizzeria_01', 'Address_01'),
 # Заполнение таблицы pizza
 insert into pizzeria_project.pizza (p_name, p_description, p_base_price, p_photo_link)
 values ('Pizza_name_01', 'Description_01', 10, 'url_01'),
-       ('Pizza_name_02', 'Description_02', 11, 'url_02'),
-       ('Pizza_name_03', 'Description_03', 9, 'url_03'),
-       ('Pizza_name_04', 'Description_04', 12, 'url_04');
+       ('Pizza_name_02', 'Description_02', 10, 'url_02'),
+       ('Pizza_name_03', 'Description_03', 10, 'url_03'),
+       ('Pizza_name_04', 'Description_04', 10, 'url_04');
 
 # Заполнение таблицы pizzeria_pizza
 insert into pizzeria_project.pizzeria_pizza (pizzeria_id, pizza_id)

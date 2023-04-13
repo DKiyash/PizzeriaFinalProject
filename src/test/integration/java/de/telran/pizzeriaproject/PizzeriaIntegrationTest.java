@@ -18,13 +18,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-//Интеграционный тест для сущности Пиццерия (нужно каждый раз удалять и создавать заново БД pizzeria_project в MySQL WorkBench)
+//Интеграционный тест для сущности Пиццерия.
+//Нужно каждый раз удалять и создавать заново БД pizzeria_project в MySQL WorkBench
+//В тестовой БД 4 пиццерии:
+//пиццерия с id=1 используем для запроса по id и не меняем в ней данные ходе тестов
+//пиццерия с id=2 и 3 используем для update по id, данные в них меняются
+//пиццерия с id=4 используем для delete по id
 @SpringBootTest
-//@Sql({
-//        "classpath:sql/Create_test_shcema.sql"
-////        "classpath:sql/Create_test_shcema.sql",
-////        "classpath:sql/Test_data.sql"
-//})
 public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureInitializer{
 
     static final String API_PATH = "/api/v1/pizzerias";
@@ -40,7 +40,6 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
     }
 
     //Тестирование метода createPizzeria (Создание новой пиццерии)
-
     @Nested
     @DisplayName("Создание новой пиццерии")
     class CreateNewPizzeriaTest {
@@ -87,11 +86,11 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
 
             //Создаем объект пицца для передачи в теле запроса (Важно: Пиццы должны уже быть в перечне пицц)
             Pizza newPizza1 = new Pizza();
-            newPizza1.setP_id(2L);
+            newPizza1.setP_id(1L);
             newPizzeria.getPizzaSet().add(newPizza1);
 
             Pizza newPizza2 = new Pizza();
-            newPizza2.setP_id(3L);
+            newPizza2.setP_id(2L);
             newPizzeria.getPizzaSet().add(newPizza2);
 
             MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(API_PATH + "")
@@ -125,7 +124,7 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
 
             //Создаем объект пицца для передачи в теле запроса (Одна из пицц не должна быть в перечне пицц)
             Pizza newPizza1 = new Pizza();
-            newPizza1.setP_id(2L);
+            newPizza1.setP_id(1L);
             newPizzeria.getPizzaSet().add(newPizza1);
 
             Pizza newPizza2 = new Pizza();
@@ -146,16 +145,16 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
             //Создаем объект пиццерия (пицца с такими параметрами уже должна быть в базе)
             Pizzeria newPizzeria = new Pizzeria();
             newPizzeria.setPr_id(Mockito.any());
-            newPizzeria.setPr_name("Pizzeria_02");
-            newPizzeria.setPr_address("Address_02");
+            newPizzeria.setPr_name("Pizzeria_01");
+            newPizzeria.setPr_address("Address_01");
 
             //Создаем объект пицца для передачи в теле запроса (Важно: Пиццы должны уже быть в перечне пицц)
             Pizza newPizza1 = new Pizza();
-            newPizza1.setP_id(2L);
+            newPizza1.setP_id(1L);
             newPizzeria.getPizzaSet().add(newPizza1);
 
             Pizza newPizza2 = new Pizza();
-            newPizza2.setP_id(3L);
+            newPizza2.setP_id(2L);
             newPizzeria.getPizzaSet().add(newPizza2);
 
             mockMvc.perform(MockMvcRequestBuilders.post(API_PATH + "")
@@ -184,23 +183,23 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
 
     //Тестирование метода GetPizzeriaByIdTest (Получение пиццерии по ID)
     @Nested
-    @DisplayName("Получение пиццерии по id=2")
+    @DisplayName("Получение пиццерии по id")
     class GetPizzeriaByIdTest {
         @Test
-        @DisplayName("Успешное получение пиццерии по id")
+        @DisplayName("Успешное получение пиццерии по id=1")
         void getPizzeriaById_returnPizzaAndStatus200() throws Exception {
-            Long id = 2L;
+            Long id = 1L;
             mockMvc.perform(MockMvcRequestBuilders.get(API_PATH + "/{id}", id))
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.pr_id").value(id))
-                    .andExpect(jsonPath("$.pr_name").value("Pizzeria_02"))
-                    .andExpect(jsonPath("$.pr_address").value("Address_02"));
+                    .andExpect(jsonPath("$.pr_name").value("Pizzeria_01"))
+                    .andExpect(jsonPath("$.pr_address").value("Address_01"));
         }
 
         @Test
-        @DisplayName("Пиццерия по id не найдена")
+        @DisplayName("Пиццерия по id=400 не найдена")
         public void getPizzeriaByIdTest_ReturnNotFound() throws Exception {
             Long id = 400L;
             mockMvc.perform(MockMvcRequestBuilders.get(API_PATH + "/{id}", id))
@@ -211,12 +210,12 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
 
     //Тестирование метода updatePizzeriaById (Обновление существующей пиццерии по ID)
     @Nested
-    @DisplayName("Обновление пиццерии по id=3, id=4")
+    @DisplayName("Обновление пиццерии по id=2, id=3")
     class UpdatePizzeriaByIdTest {
         @Test
-        @DisplayName("Успешное обновление пиццерии по id=3 (без списка пицц)")
+        @DisplayName("Успешное обновление пиццерии по id=2 (без списка пицц)")
         void updatePizzeriaById_WithoutPizzaList_returnPizzeriaAndStatus200() throws Exception {
-            Long id = 3L;
+            Long id = 2L;
             //Создаем объект пиццерия с измененными параметрами
             Pizzeria newPizzeria = new Pizzeria();
             newPizzeria.setPr_id(Mockito.any());
@@ -236,9 +235,9 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
         }
 
         @Test
-        @DisplayName("Успешное обновление пиццерии по id=4 (со списком пицц)")
+        @DisplayName("Успешное обновление пиццерии по id=3 (со списком пицц)")
         void updatePizzeriaById_WithPizzaList_returnPizzeriaAndStatus200() throws Exception {
-            Long id = 4L;
+            Long id = 3L;
             //Создаем объект пиццерия с измененными параметрами
             Pizzeria newPizzeria = new Pizzeria();
             newPizzeria.setPr_id(Mockito.any());
@@ -247,11 +246,11 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
 
             //Создаем объект пицца для передачи в теле запроса (Важно: Пиццы должны уже быть в перечне пицц)
             Pizza newPizza1 = new Pizza();
-            newPizza1.setP_id(2L);
+            newPizza1.setP_id(1L);
             newPizzeria.getPizzaSet().add(newPizza1);
 
             Pizza newPizza2 = new Pizza();
-            newPizza2.setP_id(3L);
+            newPizza2.setP_id(2L);
             newPizzeria.getPizzaSet().add(newPizza2);
 
             mockMvc.perform(MockMvcRequestBuilders.put(API_PATH + "/{id}", id)
@@ -269,9 +268,9 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
         }
 
         @Test
-        @DisplayName("Нельзя обновить пиццерию по id=4, если указанных пицц нет в списке пицц")
+        @DisplayName("Нельзя обновить пиццерию по id=3, если указанных пицц нет в списке пицц")
         void updatePizzeriaById_WithWrongPizzaList_returnStatus400() throws Exception {
-            Long id = 4L;
+            Long id = 3L;
             //Создаем объект пиццерия с измененными параметрами
             Pizzeria newPizzeria = new Pizzeria();
             newPizzeria.setPr_id(Mockito.any());
@@ -280,11 +279,11 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
 
             //Создаем объект пицца для передачи в теле запроса (Одна из пицц не должна быть в перечне пицц)
             Pizza newPizza1 = new Pizza();
-            newPizza1.setP_id(2L);
+            newPizza1.setP_id(1L);
             newPizzeria.getPizzaSet().add(newPizza1);
 
             Pizza newPizza2 = new Pizza();
-            newPizza2.setP_id(30L);//Такой пиццы нет в списке пицц
+            newPizza2.setP_id(400L);//Такой пиццы нет в списке пицц
             newPizzeria.getPizzaSet().add(newPizza2);
 
             mockMvc.perform(MockMvcRequestBuilders.put(API_PATH + "/{id}", id)
@@ -293,6 +292,33 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("Нельзя обновить пиццерию по id=3, если пиццерия с такими параметрами уже существует")
+        void updatePizzeria_WithDuplicateEntryException_returnStatus409() throws Exception {
+            Long id = 3L;
+            //Создаем объект пиццерия (пиццерия с такими параметрами уже должна быть в базе берем пиццерию с id=1)
+            Pizzeria newPizzeria = new Pizzeria();
+            newPizzeria.setPr_id(Mockito.any());
+            newPizzeria.setPr_name("Pizzeria_01");
+            newPizzeria.setPr_address("Address_01");
+
+            //Создаем объект пицца для передачи в теле запроса (Важно: Пиццы должны уже быть в перечне пицц)
+            Pizza newPizza1 = new Pizza();
+            newPizza1.setP_id(1L);
+            newPizzeria.getPizzaSet().add(newPizza1);
+
+            Pizza newPizza2 = new Pizza();
+            newPizza2.setP_id(2L);
+            newPizzeria.getPizzaSet().add(newPizza2);
+
+            mockMvc.perform(MockMvcRequestBuilders.put(API_PATH + "/{id}", id)
+                            .with(httpBasic("admin","admin"))
+                            .content(objectMapper.writeValueAsString(newPizzeria))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isConflict());
         }
 
         @Test
@@ -316,12 +342,12 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
 
     //Тестирование метода deletePizzeriaById (Удаление пиццерии по ID)
     @Nested
-    @DisplayName("Удаление пиццерии по id=1")
+    @DisplayName("Удаление пиццерии по id")
     class DeletePizzeriaByIdTest {
         @Test
-        @DisplayName("Успешное удаление пиццерии по id=1")
+        @DisplayName("Успешное удаление пиццерии по id=4")
         void deletePizzeriaById_returnStatus200() throws Exception {
-            Long id = 1L;
+            Long id = 4L;
             mockMvc.perform(MockMvcRequestBuilders.delete(API_PATH + "/{id}", id)
                             .with(httpBasic("admin","admin")))
                     .andDo(MockMvcResultHandlers.print())

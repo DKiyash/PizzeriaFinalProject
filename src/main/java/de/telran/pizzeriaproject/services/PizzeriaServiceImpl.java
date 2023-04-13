@@ -69,10 +69,10 @@ public class PizzeriaServiceImpl implements PizzeriaSersice {
     @Override
     @Transactional
     public Pizzeria updatePizzeriaById(Long id, Pizzeria newPizzeria)
-            throws PizzeriaNotFoundException, PizzaNotFoundException, DuplicateEntryException {
+            throws PizzeriaNotFoundException, PizzaNotFoundException {
         //Проверяем, есть ли пиццерия в БД, если нет - выбрасываем exception
         pizzeriaRepositories.findById(id)
-                .orElseThrow(() -> new PizzeriaNotFoundException("Pizzeria not found for id: " + id));
+                .orElseThrow(() -> new PizzeriaNotFoundException("Pizzeria is not found for id: " + id));
         //Устанавливаем id полученный из пути (вдруг в теле другой id, чтобы не была создана новая пиццерия)
         newPizzeria.setPr_id(id);
         //Проверяем список пицц в сохраняемой пиццерии
@@ -81,16 +81,21 @@ public class PizzeriaServiceImpl implements PizzeriaSersice {
         if(!pizzaSet.isEmpty()){
             for (Pizza pz:pizzaSet) {
                 pizzaRepositories.findById(pz.getP_id())
-                        .orElseThrow(() -> new PizzaNotFoundException("Pizza not found for id: " + pz.getP_id()));
+                        .orElseThrow(() -> new PizzaNotFoundException("Pizza is not found for id: " + pz.getP_id()));
             }
         }
-        //Перехватываем DataIntegrityViolationException, которое появляется
-        //при попытке сохранения сущности с одинаковыми параметрами
-        try{
-            return pizzeriaRepositories.save(newPizzeria);
-        } catch (DataIntegrityViolationException e){
-            throw  new DuplicateEntryException("Pizzeria with these parameters already exists");
-        }
+        //Пытаемся сохранить новую пиццу, если будет DataIntegrityViolationException,
+        // то перехватываем ее в контроллере
+        return pizzeriaRepositories.save(newPizzeria);
+
+        //ЭТО ПОЧЕМУ-ТО НЕ РАБОТАЕТ (можно перехватить только уже в контроллере, там работает!!!)
+//        //Перехватываем DataIntegrityViolationException, которое появляется
+//        //при попытке сохранения сущности с одинаковыми параметрами
+//        try{
+//            return pizzeriaRepositories.save(newPizzeria);
+//        } catch (DataIntegrityViolationException e){
+//            throw  new DuplicateEntryException("Pizzeria with these parameters already exists");
+//        }
     }
 
     //Удаление пиццерии
