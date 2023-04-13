@@ -38,7 +38,7 @@ public class Pizza {
     private String p_description;
 
     @NotNull
-    @Min(value = 0, message = "The price must be bigger than 0")
+    @Min(value = 2, message = "The price must be bigger than 2")//Не более чем константная скидка
     @Max(value = 100, message = "The price must be less or equal to 100")
     @Column(name = "p_base_price")
     private Double p_base_price;
