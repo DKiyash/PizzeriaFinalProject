@@ -40,8 +40,8 @@ public class PizzaServiceImpl implements PizzaSersice {
     //Получение списка всех пицц постранично (используется в контроллере)
     @Override
     @Transactional(readOnly = true)
-    public Iterable<Pizza> findAll(Pageable pageable) {
-        return pizzaRepositories.findAll(pageable);
+    public List<Pizza> findAll(Pageable pageable) {
+        return pizzaRepositories.findAll(pageable).getContent();
     }
 
     //Получение списка всех пицц постранично (используется в PizzaPriceScheduler)

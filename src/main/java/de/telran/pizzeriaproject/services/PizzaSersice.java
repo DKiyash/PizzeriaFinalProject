@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface PizzaSersice {
     Pizza save(Pizza newPizza);
 
-    Iterable<Pizza> findAll(Pageable pageable);
+    List<Pizza> findAll(Pageable pageable);
     List<Pizza> findAll();
 
     void deleteById(Long id) throws PizzaNotFoundException;

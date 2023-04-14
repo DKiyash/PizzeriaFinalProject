@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -41,9 +42,9 @@ public class PizzeriaController {
                             schema = @Schema(implementation = Pizzeria.class))})
     })
     @GetMapping()
-    ResponseEntity<?> getAllPizzerias(@Parameter(description = "Page parameters, example: {\"page\":0, \"size\":5}")
+    ResponseEntity<List<Pizzeria>> getAllPizzerias(@Parameter(description = "Page parameters, example: {\"page\":0, \"size\":5}")
                                       Pageable pageable) {
-        Iterable<Pizzeria> pizzeriaList = pizzeriaSersice.findAll(pageable);
+        List<Pizzeria> pizzeriaList = pizzeriaSersice.findAll(pageable);
         return ResponseEntity.ok(pizzeriaList);
     }
 

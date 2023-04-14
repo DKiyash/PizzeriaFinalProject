@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface PizzeriaSersice {
     Pizzeria save(Pizzeria newPizza) throws PizzaNotFoundException;
 
-    Iterable<Pizzeria> findAll(Pageable pageable);
+    List<Pizzeria> findAll(Pageable pageable);
 
     void deleteById(Long id) throws PizzeriaNotFoundException;
 

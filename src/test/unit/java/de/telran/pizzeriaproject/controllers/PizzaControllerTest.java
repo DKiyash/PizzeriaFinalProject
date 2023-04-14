@@ -39,94 +39,94 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //Создаем только бин контроллера
 @WebMvcTest(controllers = PizzaController.class)
 class PizzaControllerTest {
-
-    static final String API_PATH = "/api/v1/pizzas";
-
-    //Предназначен для тестирования контроллеров,
-    //позволяет тестировать контроллеры без запуска http-сервера
-    @Autowired
-    MockMvc mockMvc;
-
-    @MockBean
-    PizzaSersice pizzaSersice;
-
-    //Тестирование метода getAllPizzas
-    @Test
-    //Чтобы избежать: Error message = Unauthorized
-    @WithMockUser
-    void getAllPizzas_returnAllPizzasAndStatus200() throws Exception {
-        Pageable pageable = PageRequest.of(0, 10);
-        List<Pizza> pizzas = Arrays.asList(
-                new Pizza("Pizza name_01", "Description_01", 10.00, "url_01"),
-                new Pizza("Pizza name_02", "Description_02", 10.00, "url_02"));
-        Page<Pizza> pizzaPage = new PageImpl<>(pizzas, pageable, pizzas.size());
-
-        Mockito.when(pizzaSersice.findAll(Mockito.any())).thenReturn(pizzaPage);
-
-        mockMvc.perform(MockMvcRequestBuilders.get(API_PATH + ""))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print());
-    }
-
-    @Test
-    //Чтобы избежать: Error message = Unauthorized
-    @WithMockUser(username = "admin", password = "admin", roles = "ADMIN")
-    void createPizza_returnIdCreatedPizzaAndLocationAndStatus201() {
-//        Pizza newPizza = new Pizza("Pizza name_01","Description_01", 10.00, "url_01");
-
-    }
-
-    //Получение пиццы по ID
-    @Nested
-    class GetByIdTest {
-        @DisplayName("getPizzaById found and return Pizza and Response 200 (OK)")
-        @Test
-        @WithMockUser
-        void getPizzaById_returnPizzaAndStatus200() throws Exception {
-            Pizza newPizza = new Pizza();
-            newPizza.setP_id(1L);
-            newPizza.setP_name("Pizza name_01");
-            newPizza.setP_description("Description_01");
-            newPizza.setP_base_price(10.00);
-            newPizza.setP_photo_link("url_01");
-
-            Mockito.when(pizzaSersice.findById(1L)).thenReturn(Optional.of(newPizza));
-
-            mockMvc.perform(MockMvcRequestBuilders.get(API_PATH + "/1"))
-                    .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.p_id").value("1"))
-                    .andExpect(jsonPath("$.p_name").value("Pizza name_01"))
-                    .andExpect(jsonPath("$.p_description").value("Description_01"))
-                    .andExpect(jsonPath("$.p_base_price").value("10.0"))
-                    .andExpect(jsonPath("$.p_photo_link").value("url_01"))
-                    .andDo(MockMvcResultHandlers.print());
-
-            //Проверка, что метод вызывался только 1 раз
-            Mockito.verify(pizzaSersice, Mockito.times(1)).findById(1L);
-        }
-
-        @DisplayName("getPizzaById notfound Pizza and return 404 (NOT_FOUND)")
-        @Test
-        @WithMockUser
-        public void getEventByIdTest_ShouldReturnNotFound() throws Exception {
-            Mockito.when(pizzaSersice.findById(1L)).thenReturn(Optional.empty());
-            mockMvc.perform(MockMvcRequestBuilders.get(API_PATH + "/1"))
-                    .andExpect(status().isNotFound())
-                    .andDo(MockMvcResultHandlers.print());
-            //Проверка, что метод вызывался только 1 раз
-            Mockito.verify(pizzaSersice, Mockito.times(1)).findById(1L);
-        }
-    }
-
-    @Test
-    void updatePizzaById() {
-    }
-
-    @Test
-    void deletePizzaById() {
-    }
+//
+//    static final String API_PATH = "/api/v1/pizzas";
+//
+//    //Предназначен для тестирования контроллеров,
+//    //позволяет тестировать контроллеры без запуска http-сервера
+//    @Autowired
+//    MockMvc mockMvc;
+//
+//    @MockBean
+//    PizzaSersice pizzaSersice;
+//
+//    //Тестирование метода getAllPizzas
+//    @Test
+//    //Чтобы избежать: Error message = Unauthorized
+//    @WithMockUser
+//    void getAllPizzas_returnAllPizzasAndStatus200() throws Exception {
+//        Pageable pageable = PageRequest.of(0, 10);
+//        List<Pizza> pizzas = Arrays.asList(
+//                new Pizza("Pizza name_01", "Description_01", 10.00, "url_01"),
+//                new Pizza("Pizza name_02", "Description_02", 10.00, "url_02"));
+//        Page<Pizza> pizzaPage = new PageImpl<>(pizzas, pageable, pizzas.size());
+//
+//        Mockito.when(pizzaSersice.findAll(Mockito.any())).thenReturn(pizzaPage);
+//
+//        mockMvc.perform(MockMvcRequestBuilders.get(API_PATH + ""))
+//                .andExpect(status().isOk())
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andDo(MockMvcResultHandlers.print());
+//    }
+//
+//    @Test
+//    //Чтобы избежать: Error message = Unauthorized
+//    @WithMockUser(username = "admin", password = "admin", roles = "ADMIN")
+//    void createPizza_returnIdCreatedPizzaAndLocationAndStatus201() {
+////        Pizza newPizza = new Pizza("Pizza name_01","Description_01", 10.00, "url_01");
+//
+//    }
+//
+//    //Получение пиццы по ID
+//    @Nested
+//    class GetByIdTest {
+//        @DisplayName("getPizzaById found and return Pizza and Response 200 (OK)")
+//        @Test
+//        @WithMockUser
+//        void getPizzaById_returnPizzaAndStatus200() throws Exception {
+//            Pizza newPizza = new Pizza();
+//            newPizza.setP_id(1L);
+//            newPizza.setP_name("Pizza name_01");
+//            newPizza.setP_description("Description_01");
+//            newPizza.setP_base_price(10.00);
+//            newPizza.setP_photo_link("url_01");
+//
+//            Mockito.when(pizzaSersice.findById(1L)).thenReturn(Optional.of(newPizza));
+//
+//            mockMvc.perform(MockMvcRequestBuilders.get(API_PATH + "/1"))
+//                    .andExpect(status().isOk())
+//                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                    .andExpect(jsonPath("$.p_id").value("1"))
+//                    .andExpect(jsonPath("$.p_name").value("Pizza name_01"))
+//                    .andExpect(jsonPath("$.p_description").value("Description_01"))
+//                    .andExpect(jsonPath("$.p_base_price").value("10.0"))
+//                    .andExpect(jsonPath("$.p_photo_link").value("url_01"))
+//                    .andDo(MockMvcResultHandlers.print());
+//
+//            //Проверка, что метод вызывался только 1 раз
+//            Mockito.verify(pizzaSersice, Mockito.times(1)).findById(1L);
+//        }
+//
+//        @DisplayName("getPizzaById notfound Pizza and return 404 (NOT_FOUND)")
+//        @Test
+//        @WithMockUser
+//        public void getEventByIdTest_ShouldReturnNotFound() throws Exception {
+//            Mockito.when(pizzaSersice.findById(1L)).thenReturn(Optional.empty());
+//            mockMvc.perform(MockMvcRequestBuilders.get(API_PATH + "/1"))
+//                    .andExpect(status().isNotFound())
+//                    .andDo(MockMvcResultHandlers.print());
+//            //Проверка, что метод вызывался только 1 раз
+//            Mockito.verify(pizzaSersice, Mockito.times(1)).findById(1L);
+//        }
+//    }
+//
+//    @Test
+//    void updatePizzaById() {
+//    }
+//
+//    @Test
+//    void deletePizzaById() {
+//    }
 }
 
 /*

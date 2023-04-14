@@ -54,8 +54,8 @@ public class PizzeriaServiceImpl implements PizzeriaSersice {
     //Получение списка всех пиццерий постранично
     @Override
     @Transactional(readOnly = true)
-    public Iterable<Pizzeria> findAll(Pageable pageable) {
-        return pizzeriaRepositories.findAll(pageable);
+    public List<Pizzeria> findAll(Pageable pageable) {
+        return pizzeriaRepositories.findAll(pageable).getContent();
     }
 
     //Поиск пиццерии по id
