@@ -31,10 +31,10 @@ public class PizzaPriceScheduler {
     /**
      * This field is used to call methods of PizzaSersice class to work with a database.
      */
-    private final PizzaSersice pizzaSersice;
+    private final PizzaService pizzaService;
 
-    public PizzaPriceScheduler(PizzaSersice pizzaSersice) {
-        this.pizzaSersice = pizzaSersice;
+    public PizzaPriceScheduler(PizzaService pizzaService) {
+        this.pizzaService = pizzaService;
     }
 
     /**
@@ -46,8 +46,8 @@ public class PizzaPriceScheduler {
     //Выполнение каждую минуту в 00 сек с Пн по Пт (для теста)
 //    @Scheduled(cron = "0 * * * * MON-FRI", zone = "Europe/Berlin")
     @Scheduled(cron = "0 0 13 * * MON-FRI", zone = "Europe/Berlin") //Выполнение в 13:00 каждый день с Пн по Пт
-    public void schedualePizzaPriceLanch() {
-        List<Pizza> pizzaList = pizzaSersice.findAll();
+    public void schedualePizzaPriceLunch() {
+        List<Pizza> pizzaList = pizzaService.findAll();
         Double pizzaCurrentBasePrice;
         for (Pizza pizza : pizzaList) {
             pizzaCurrentBasePrice = pizza.getP_base_price();
@@ -57,7 +57,7 @@ public class PizzaPriceScheduler {
                 pizzaCurrentBasePrice -= LUNCH_TIME_DISCOUNT;
                 pizza.setP_base_price(pizzaCurrentBasePrice);
                 //Сохранение нового значения в БД
-                pizzaSersice.updatePizzaById(pizza.getP_id(), pizza);
+                pizzaService.updatePizzaById(pizza.getP_id(), pizza);
             }
         }
         log.info("It`s lunchtime. The price changed for Pizza.");
@@ -73,21 +73,21 @@ public class PizzaPriceScheduler {
     //Выполнение каждую минуту в 30 сек с Пн по Пт (для теста)
 //    @Scheduled(cron = "30 * * * * MON-FRI", zone = "Europe/Berlin")
     @Scheduled(cron = "0 0 14 * * MON-FRI", zone = "Europe/Berlin") //Выполнение в 14:00 каждый день с Пн по Пт
-    public void schedualePizzaPriceNoLanch() {
+    public void schedualePizzaPriceNoLunch() {
         //Если это первый запуск, то метод не должен увеличивать стоимость
         if (firstLaunch) {
             firstLaunch = false;
             return;
         }
         //Если это не первый запуск, то метод должен увеличить стоимость (т.е. цена была уже снижена)
-        List<Pizza> pizzaList = pizzaSersice.findAll();
+        List<Pizza> pizzaList = pizzaService.findAll();
         Double pizzaCurrentBasePrice;
         for (Pizza pizza : pizzaList) {
             pizzaCurrentBasePrice = pizza.getP_base_price();
             pizzaCurrentBasePrice += LUNCH_TIME_DISCOUNT;//Увеличение стоимости на фиксированную величину
             pizza.setP_base_price(pizzaCurrentBasePrice);
             //Сохранение нового значения в БД
-            pizzaSersice.updatePizzaById(pizza.getP_id(), pizza);
+            pizzaService.updatePizzaById(pizza.getP_id(), pizza);
         }
         log.info("Lunch is over. Pizza prices are basic.");
     }

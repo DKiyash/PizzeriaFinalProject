@@ -4,7 +4,7 @@ import de.telran.pizzeriaproject.domain.Pizza;
 import de.telran.pizzeriaproject.domain.Pizzeria;
 import de.telran.pizzeriaproject.exeptions.DuplicateEntryException;
 import de.telran.pizzeriaproject.exeptions.PizzaNotFoundException;
-import de.telran.pizzeriaproject.services.PizzaSersice;
+import de.telran.pizzeriaproject.services.PizzaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,11 +29,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/pizzas")
 public class PizzaController {
-    private final PizzaSersice pizzaSersice;
+    private final PizzaService pizzaService;
 
     @Autowired
-    public PizzaController(PizzaSersice pizzaSersice) {
-        this.pizzaSersice = pizzaSersice;
+    public PizzaController(PizzaService pizzaService) {
+        this.pizzaService = pizzaService;
     }
 
     //Получение списка всех пицц
@@ -46,7 +46,7 @@ public class PizzaController {
     @GetMapping()
     ResponseEntity<List<Pizza>> getAllPizzas(@Parameter(description = "Page parameters, example: {\"page\":0, \"size\":5}")
                                    Pageable pageable) {
-        List<Pizza> pizzaList = pizzaSersice.findAll(pageable);
+        List<Pizza> pizzaList = pizzaService.findAll(pageable);
             return ResponseEntity.ok(pizzaList);
     }
 
@@ -62,7 +62,7 @@ public class PizzaController {
     ResponseEntity<?> createPizza(@Valid @RequestBody Pizza newPizza) {
         try {
             //Попробовать создать новую пиццу
-            Pizza pizza = pizzaSersice.save(newPizza);
+            Pizza pizza = pizzaService.save(newPizza);
             //Если новая пицца добавлена, то вернуть код 201 и location (ссылку на новую пиццу)
             log.info("New Pizza added successfully");
             if (pizza != null) {
@@ -92,7 +92,7 @@ public class PizzaController {
                     content = @Content) })
     @GetMapping("/{id}")
     ResponseEntity<?> getPizzaById(@PathVariable Long id) {
-        Optional<Pizza> result = pizzaSersice.findById(id);
+        Optional<Pizza> result = pizzaService.findById(id);
         //Если пицца есть, то вернуть ее
         if (result.isPresent()){
             Pizza pizza = result.get();
@@ -116,7 +116,7 @@ public class PizzaController {
                                       @PathVariable Long id, @Valid @RequestBody Pizza newPizza) {
         try {
             //Попробовать обновить пиццу
-            Pizza updatedPizza = pizzaSersice.updatePizzaById(id, newPizza);
+            Pizza updatedPizza = pizzaService.updatePizzaById(id, newPizza);
             return ResponseEntity.ok(updatedPizza);
         } catch (PizzaNotFoundException e) {//Если пиццы нет в БД, то вернуть "NOT_FOUND"
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -137,7 +137,7 @@ public class PizzaController {
                                       @PathVariable Long id) {
         try {
             //Попробовать удалить пиццу
-            pizzaSersice.deleteById(id);
+            pizzaService.deleteById(id);
             return ResponseEntity.ok().build();
         } catch (PizzaNotFoundException e) {//Если пиццы нет в БД, то вернуть "NOT_FOUND"
             return ResponseEntity.notFound().build();

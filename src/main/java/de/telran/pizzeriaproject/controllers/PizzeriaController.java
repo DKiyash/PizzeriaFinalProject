@@ -4,7 +4,7 @@ import de.telran.pizzeriaproject.domain.Pizzeria;
 import de.telran.pizzeriaproject.exeptions.DuplicateEntryException;
 import de.telran.pizzeriaproject.exeptions.PizzaNotFoundException;
 import de.telran.pizzeriaproject.exeptions.PizzeriaNotFoundException;
-import de.telran.pizzeriaproject.services.PizzeriaSersice;
+import de.telran.pizzeriaproject.services.PizzeriaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -28,10 +28,10 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/pizzerias")
 public class PizzeriaController {
-    private final PizzeriaSersice pizzeriaSersice;
+    private final PizzeriaService pizzeriaService;
 
-    public PizzeriaController(PizzeriaSersice pizzeriaSersice) {
-        this.pizzeriaSersice = pizzeriaSersice;
+    public PizzeriaController(PizzeriaService pizzeriaService) {
+        this.pizzeriaService = pizzeriaService;
     }
 
     //Получение списка всех пиццерий
@@ -44,7 +44,7 @@ public class PizzeriaController {
     @GetMapping()
     ResponseEntity<List<Pizzeria>> getAllPizzerias(@Parameter(description = "Page parameters, example: {\"page\":0, \"size\":5}")
                                       Pageable pageable) {
-        List<Pizzeria> pizzeriaList = pizzeriaSersice.findAll(pageable);
+        List<Pizzeria> pizzeriaList = pizzeriaService.findAll(pageable);
         return ResponseEntity.ok(pizzeriaList);
     }
 
@@ -61,7 +61,7 @@ public class PizzeriaController {
     ResponseEntity<?> createPizzeria(@Valid @RequestBody Pizzeria newPizzeria) {
         try {
             //Попробовать создать новую пиццерию
-            Pizzeria pizzeria = pizzeriaSersice.save(newPizzeria);
+            Pizzeria pizzeria = pizzeriaService.save(newPizzeria);
             //Если новая пиццерия добавлена, то вернуть код 201 и location (ссылку на новую пиццерию)
             log.info("New Pizzeria added successfully");
             if (pizzeria != null) {
@@ -92,7 +92,7 @@ public class PizzeriaController {
             @ApiResponse(responseCode = "404", description = "Pizzeria not found") })
     @GetMapping("/{id}")
     ResponseEntity<?> getPizzeriaById(@Parameter(description = "id of Pizzeria to be searched") @PathVariable Long id) {
-        Optional<Pizzeria> result = pizzeriaSersice.findById(id);
+        Optional<Pizzeria> result = pizzeriaService.findById(id);
         //Если пиццерия есть, то вернуть ее
         if (result.isPresent()) {
             Pizzeria pizzeria = result.get();
@@ -116,7 +116,7 @@ public class PizzeriaController {
                                          @PathVariable Long id, @Valid @RequestBody Pizzeria newPizzeria) {
         try {
             //Попробовать обновить пиццерию
-            Pizzeria updatedPizzeria = pizzeriaSersice.updatePizzeriaById(id, newPizzeria);
+            Pizzeria updatedPizzeria = pizzeriaService.updatePizzeriaById(id, newPizzeria);
             return ResponseEntity.ok(updatedPizzeria);
         } catch (PizzeriaNotFoundException e) {//Если пиццерии нет в списке пиццерий, то вернуть "NOT_FOUND"
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -139,7 +139,7 @@ public class PizzeriaController {
                                          @PathVariable Long id) {
         try {
             //Попробовать удалить пиццерию
-            pizzeriaSersice.deleteById(id);
+            pizzeriaService.deleteById(id);
             return ResponseEntity.ok().build();
         } catch (PizzeriaNotFoundException e) {//Если пиццерии нет в БД, то вернуть "NOT_FOUND"
             return ResponseEntity.notFound().build();

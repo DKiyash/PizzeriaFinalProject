@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface PizzeriaSersice {
+public interface PizzeriaService {
     Pizzeria save(Pizzeria newPizza) throws PizzaNotFoundException;
 
     List<Pizzeria> findAll(Pageable pageable);

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PizzaServiceImpl implements PizzaSersice {
+public class PizzaServiceImpl implements PizzaService {
 
     private final PizzaRepositories pizzaRepositories;
 

@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
-public interface PizzaSersice {
+public interface PizzaService {
     Pizza save(Pizza newPizza);
 
     List<Pizza> findAll(Pageable pageable);

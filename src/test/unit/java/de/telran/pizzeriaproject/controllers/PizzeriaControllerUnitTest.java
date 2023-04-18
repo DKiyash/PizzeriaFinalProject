@@ -5,7 +5,7 @@ import de.telran.pizzeriaproject.domain.Pizzeria;
 import de.telran.pizzeriaproject.exeptions.DuplicateEntryException;
 import de.telran.pizzeriaproject.exeptions.PizzaNotFoundException;
 import de.telran.pizzeriaproject.exeptions.PizzeriaNotFoundException;
-import de.telran.pizzeriaproject.services.PizzeriaSersice;
+import de.telran.pizzeriaproject.services.PizzeriaService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -29,7 +29,7 @@ import java.util.Set;
 
 class PizzeriaControllerUnitTest {
 
-    PizzeriaSersice pizzeriaService = Mockito.mock(PizzeriaSersice.class);
+    PizzeriaService pizzeriaService = Mockito.mock(PizzeriaService.class);
     PizzeriaController pizzeriaController = new PizzeriaController(pizzeriaService);
 
     //Тестирование метода getAllPizzerias (Получение списка всех пиццерий)

@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class PizzeriaServiceImpl implements PizzeriaSersice {
+public class PizzeriaServiceImpl implements PizzeriaService {
 
     private final PizzeriaRepositories pizzeriaRepositories;
     private final PizzaRepositories pizzaRepositories;
