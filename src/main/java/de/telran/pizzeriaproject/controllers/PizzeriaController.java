@@ -109,7 +109,7 @@ public class PizzeriaController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Pizzeria.class)) }),
             @ApiResponse(responseCode = "404", description = "Pizzeria is not found for id:"),
-            @ApiResponse(responseCode = "400", description = "Pizza is not found for id:"),
+            @ApiResponse(responseCode = "400", description = "Pizza list is not correct"),
             @ApiResponse(responseCode = "409", description = "Pizzeria with these parameters already exists")})
     @PutMapping("/{id}")
     ResponseEntity<?> updatePizzeriaById(@Parameter(description = "id of Pizzeria to be searched")
@@ -119,9 +119,9 @@ public class PizzeriaController {
             Pizzeria updatedPizzeria = pizzeriaSersice.updatePizzeriaById(id, newPizzeria);
             return ResponseEntity.ok(updatedPizzeria);
         } catch (PizzeriaNotFoundException e) {//Если пиццерии нет в списке пиццерий, то вернуть "NOT_FOUND"
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (PizzaNotFoundException e) {//Если список пицц некорректный, то вернуть "BAD_REQUEST"
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (DataIntegrityViolationException e) {//Если Пиццерия с такими параметрами уже существует, то вернуть "CONFLICT"
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Pizzeria with these parameters already exists");
         }
@@ -133,7 +133,7 @@ public class PizzeriaController {
             @ApiResponse(responseCode = "200", description = "Deleted the Pizzeria",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Pizzeria.class)) }),
-            @ApiResponse(responseCode = "404", description = "Pizzeria not found") })
+            @ApiResponse(responseCode = "404", description = "Pizzeria is not found") })
     @DeleteMapping(value = "/{id}")
     ResponseEntity<?> deletePizzeriaById(@Parameter(description = "id of Pizzeria to be searched")
                                          @PathVariable Long id) {

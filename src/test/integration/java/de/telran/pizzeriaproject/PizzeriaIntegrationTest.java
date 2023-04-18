@@ -181,7 +181,7 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
         }
     }
 
-    //Тестирование метода GetPizzeriaByIdTest (Получение пиццерии по ID)
+    //Тестирование метода getPizzeriaById (Получение пиццерии по ID)
     @Nested
     @DisplayName("Получение пиццерии по id")
     class GetPizzeriaByIdTest {
