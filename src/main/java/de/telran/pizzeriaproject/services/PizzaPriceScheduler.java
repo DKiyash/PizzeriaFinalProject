@@ -1,6 +1,8 @@
 package de.telran.pizzeriaproject.services;
 
 import de.telran.pizzeriaproject.domain.Pizza;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -22,6 +24,7 @@ public class PizzaPriceScheduler {
      * This field contains the discount value. The discount value is a constant.
      */
     private final Double LUNCH_TIME_DISCOUNT = 2.0;
+
     /**
      * This field contains a flag indicating whether the program was first run.
      * In order that regardless of the server start-up time,
@@ -33,6 +36,9 @@ public class PizzaPriceScheduler {
      */
     private final PizzaService pizzaService;
 
+    /**
+     * This is constructor of PizzaPriceScheduler class.
+     */
     public PizzaPriceScheduler(PizzaService pizzaService) {
         this.pizzaService = pizzaService;
     }
@@ -47,6 +53,7 @@ public class PizzaPriceScheduler {
 //    @Scheduled(cron = "0 * * * * MON-FRI", zone = "Europe/Berlin")
     @Scheduled(cron = "0 0 13 * * MON-FRI", zone = "Europe/Berlin") //Выполнение в 13:00 каждый день с Пн по Пт
     public void schedualePizzaPriceLunch() {
+        firstLaunch = false;
         List<Pizza> pizzaList = pizzaService.findAll();
         Double pizzaCurrentBasePrice;
         for (Pizza pizza : pizzaList) {
@@ -90,6 +97,13 @@ public class PizzaPriceScheduler {
             pizzaService.updatePizzaById(pizza.getP_id(), pizza);
         }
         log.info("Lunch is over. Pizza prices are basic.");
+    }
+
+    /**
+     * This method is used for tests.
+     */
+    public void setFirstLaunch(boolean firstLaunch) {
+        this.firstLaunch = firstLaunch;
     }
 
 }
