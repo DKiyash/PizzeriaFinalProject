@@ -119,7 +119,7 @@ public class PizzaController {
             Pizza updatedPizza = pizzaSersice.updatePizzaById(id, newPizza);
             return ResponseEntity.ok(updatedPizza);
         } catch (PizzaNotFoundException e) {//Если пиццы нет в БД, то вернуть "NOT_FOUND"
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (DataIntegrityViolationException e) {//Если Пицца с такими параметрами уже существует, то вернуть "CONFLICT"
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Pizza with these parameters already exists");
         }

@@ -29,8 +29,8 @@ import java.util.Set;
 
 class PizzeriaControllerUnitTest {
 
-    PizzeriaSersice pizzeriaSersice = Mockito.mock(PizzeriaSersice.class);
-    PizzeriaController pizzeriaController = new PizzeriaController(pizzeriaSersice);
+    PizzeriaSersice pizzeriaService = Mockito.mock(PizzeriaSersice.class);
+    PizzeriaController pizzeriaController = new PizzeriaController(pizzeriaService);
 
     //Тестирование метода getAllPizzerias (Получение списка всех пиццерий)
     @Test
@@ -47,7 +47,7 @@ class PizzeriaControllerUnitTest {
         );
         Pageable pageable = PageRequest.of(0, 5);
 
-        Mockito.when(pizzeriaSersice.findAll(pageable)).thenReturn(pizzeriaList);
+        Mockito.when(pizzeriaService.findAll(pageable)).thenReturn(pizzeriaList);
 
         ResponseEntity<List<Pizzeria>> response = pizzeriaController.getAllPizzerias(pageable);
         Assert.isTrue(response.getStatusCode() == HttpStatus.OK, "Код ответа должен быть 200");
@@ -72,7 +72,7 @@ class PizzeriaControllerUnitTest {
             MockHttpServletRequest request = new MockHttpServletRequest();
             RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
-            Mockito.when(pizzeriaSersice.save(newPizzeria)).thenReturn(newPizzeria);
+            Mockito.when(pizzeriaService.save(newPizzeria)).thenReturn(newPizzeria);
 
             ResponseEntity<?> response = pizzeriaController.createPizzeria(newPizzeria);
             Assert.isTrue(response.getStatusCode() == HttpStatus.CREATED, "Код ответа должен быть 201");
@@ -90,7 +90,7 @@ class PizzeriaControllerUnitTest {
             //Создаем новый объект пиццерия для теста
             Pizzeria newPizzeria = new Pizzeria(3L, "Pizzeria_03", "Address_03", pizzaSet1);
 
-            Mockito.when(pizzeriaSersice.save(newPizzeria)).thenReturn(null);
+            Mockito.when(pizzeriaService.save(newPizzeria)).thenReturn(null);
 
             ResponseEntity<?> response = pizzeriaController.createPizzeria(newPizzeria);
             Assert.isTrue(response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR, "Код ответа должен быть 500");
@@ -107,7 +107,7 @@ class PizzeriaControllerUnitTest {
             //Создаем новый объект пиццерия для теста
             Pizzeria newPizzeria = new Pizzeria(3L, "Pizzeria_03", "Address_03", pizzaSet1);
 
-            Mockito.when(pizzeriaSersice.save(newPizzeria)).thenThrow(new PizzaNotFoundException("Pizza is not found for id:"));
+            Mockito.when(pizzeriaService.save(newPizzeria)).thenThrow(new PizzaNotFoundException("Pizza is not found for id:"));
 
             ResponseEntity<?> response = pizzeriaController.createPizzeria(newPizzeria);
             Assert.isTrue(response.getStatusCode() == HttpStatus.BAD_REQUEST, "Код ответа должен быть 400");
@@ -124,7 +124,7 @@ class PizzeriaControllerUnitTest {
             //Создаем новый объект пиццерия для теста
             Pizzeria newPizzeria = new Pizzeria(3L, "Pizzeria_03", "Address_03", pizzaSet1);
 
-            Mockito.when(pizzeriaSersice.save(newPizzeria)).thenThrow(new DuplicateEntryException("Pizzeria with these parameters already exists"));
+            Mockito.when(pizzeriaService.save(newPizzeria)).thenThrow(new DuplicateEntryException("Pizzeria with these parameters already exists"));
 
             ResponseEntity<?> response = pizzeriaController.createPizzeria(newPizzeria);
             Assert.isTrue(response.getStatusCode() == HttpStatus.CONFLICT, "Код ответа должен быть 409");
@@ -147,7 +147,7 @@ class PizzeriaControllerUnitTest {
             //Создаем новый объект пиццерия для теста
             Pizzeria newPizzeria = new Pizzeria(3L, "Pizzeria_03", "Address_03", pizzaSet1);
 
-            Mockito.when(pizzeriaSersice.findById(id)).thenReturn(Optional.of(newPizzeria));
+            Mockito.when(pizzeriaService.findById(id)).thenReturn(Optional.of(newPizzeria));
 
             ResponseEntity<?> response = pizzeriaController.getPizzeriaById(id);
             Assert.isTrue(response.getStatusCode() == HttpStatus.OK, "Код ответа должен быть 200");
@@ -165,7 +165,7 @@ class PizzeriaControllerUnitTest {
             //Создаем новый объект пиццерия для теста
             Pizzeria newPizzeria = new Pizzeria(3L, "Pizzeria_03", "Address_03", pizzaSet1);
 
-            Mockito.when(pizzeriaSersice.findById(id)).thenReturn(Optional.empty());
+            Mockito.when(pizzeriaService.findById(id)).thenReturn(Optional.empty());
 
             ResponseEntity<?> response = pizzeriaController.getPizzeriaById(id);
             Assert.isTrue(response.getStatusCode() == HttpStatus.NOT_FOUND, "Код ответа должен быть 404");
@@ -188,7 +188,7 @@ class PizzeriaControllerUnitTest {
             //Создаем новый объект пиццерия для теста
             Pizzeria newPizzeria = new Pizzeria(3L, "Pizzeria_03", "Address_03", pizzaSet1);
 
-            Mockito.when(pizzeriaSersice.updatePizzeriaById(id, newPizzeria)).thenReturn(newPizzeria);
+            Mockito.when(pizzeriaService.updatePizzeriaById(id, newPizzeria)).thenReturn(newPizzeria);
 
             ResponseEntity<?> response = pizzeriaController.updatePizzeriaById(id, newPizzeria);
             Assert.isTrue(response.getStatusCode() == HttpStatus.OK, "Код ответа должен быть 200");
@@ -206,7 +206,7 @@ class PizzeriaControllerUnitTest {
             //Создаем новый объект пиццерия для теста
             Pizzeria newPizzeria = new Pizzeria(3L, "Pizzeria_03", "Address_03", pizzaSet1);
 
-            Mockito.when(pizzeriaSersice.updatePizzeriaById(id, newPizzeria)).thenThrow(new PizzeriaNotFoundException("Pizzeria is not found for id:"));
+            Mockito.when(pizzeriaService.updatePizzeriaById(id, newPizzeria)).thenThrow(new PizzeriaNotFoundException("Pizzeria is not found for id:"));
 
             ResponseEntity<?> response = pizzeriaController.updatePizzeriaById(id, newPizzeria);
             Assert.isTrue(response.getStatusCode() == HttpStatus.NOT_FOUND, "Код ответа должен быть 404");
@@ -224,7 +224,7 @@ class PizzeriaControllerUnitTest {
             //Создаем новый объект пиццерия для теста
             Pizzeria newPizzeria = new Pizzeria(3L, "Pizzeria_03", "Address_03", pizzaSet1);
 
-            Mockito.when(pizzeriaSersice.updatePizzeriaById(id, newPizzeria)).thenThrow(new PizzaNotFoundException("Pizza is not found for id:"));
+            Mockito.when(pizzeriaService.updatePizzeriaById(id, newPizzeria)).thenThrow(new PizzaNotFoundException("Pizza is not found for id:"));
 
             ResponseEntity<?> response = pizzeriaController.updatePizzeriaById(id, newPizzeria);
             Assert.isTrue(response.getStatusCode() == HttpStatus.BAD_REQUEST, "Код ответа должен быть 400");
@@ -242,7 +242,7 @@ class PizzeriaControllerUnitTest {
             //Создаем новый объект пиццерия для теста
             Pizzeria newPizzeria = new Pizzeria(3L, "Pizzeria_03", "Address_03", pizzaSet1);
 
-            Mockito.when(pizzeriaSersice.updatePizzeriaById(id, newPizzeria)).thenThrow(new DataIntegrityViolationException("Pizzeria with these parameters already exists"));
+            Mockito.when(pizzeriaService.updatePizzeriaById(id, newPizzeria)).thenThrow(new DataIntegrityViolationException("Pizzeria with these parameters already exists"));
 
             ResponseEntity<?> response = pizzeriaController.updatePizzeriaById(id, newPizzeria);
             Assert.isTrue(response.getStatusCode() == HttpStatus.CONFLICT, "Код ответа должен быть 409");
