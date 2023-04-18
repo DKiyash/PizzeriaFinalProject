@@ -2,8 +2,8 @@ package de.telran.pizzeriaproject.controllers;
 
 
 import de.telran.pizzeriaproject.domain.Pizza;
-import de.telran.pizzeriaproject.exeptions.DuplicateEntryException;
-import de.telran.pizzeriaproject.exeptions.PizzaNotFoundException;
+import de.telran.pizzeriaproject.services.exeptions.DuplicateEntryException;
+import de.telran.pizzeriaproject.services.exeptions.PizzaNotFoundException;
 import de.telran.pizzeriaproject.services.PizzaService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

@@ -1,7 +1,7 @@
 package de.telran.pizzeriaproject.services;
 
 import de.telran.pizzeriaproject.domain.Pizza;
-import de.telran.pizzeriaproject.exeptions.PizzaNotFoundException;
+import de.telran.pizzeriaproject.services.exeptions.PizzaNotFoundException;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

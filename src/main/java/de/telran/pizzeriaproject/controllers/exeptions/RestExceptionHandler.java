@@ -1,4 +1,4 @@
-package de.telran.pizzeriaproject.exeptions;
+package de.telran.pizzeriaproject.controllers.exeptions;
 
 import org.slf4j.MDC;
 import org.springframework.dao.DataIntegrityViolationException;

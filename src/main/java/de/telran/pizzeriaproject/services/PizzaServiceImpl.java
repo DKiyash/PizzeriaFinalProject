@@ -1,8 +1,8 @@
 package de.telran.pizzeriaproject.services;
 
 import de.telran.pizzeriaproject.domain.Pizza;
-import de.telran.pizzeriaproject.exeptions.DuplicateEntryException;
-import de.telran.pizzeriaproject.exeptions.PizzaNotFoundException;
+import de.telran.pizzeriaproject.services.exeptions.DuplicateEntryException;
+import de.telran.pizzeriaproject.services.exeptions.PizzaNotFoundException;
 import de.telran.pizzeriaproject.repositories.PizzaRepositories;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;

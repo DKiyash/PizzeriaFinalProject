@@ -1,4 +1,4 @@
-package de.telran.pizzeriaproject.exeptions;
+package de.telran.pizzeriaproject.services.exeptions;
 
 public class PizzaNotFoundException extends RuntimeException{
     public PizzaNotFoundException(String message) {
