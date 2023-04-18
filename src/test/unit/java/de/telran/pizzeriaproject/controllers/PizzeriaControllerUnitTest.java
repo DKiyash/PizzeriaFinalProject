@@ -267,15 +267,14 @@ class PizzeriaControllerUnitTest {
         @Test
         @DisplayName("Pizzeria is not found for id:, код 404")
         void deletePizzeria_returnStatus404() {
-//            Long id = 2L;
-//
-////            Mockito.doThrow(new PizzeriaNotFoundException("Pizzeria is not found for id:")).when(pizzeriaController.deletePizzeriaById(id));
-//            Mockito.doThrow(new PizzeriaNotFoundException("Pizzeria is not found for id:")).when(Mockito.mock(PizzeriaSersice.class)).deleteById(id);
-//
-//            ResponseEntity<?> response = pizzeriaController.deletePizzeriaById(id);
-//            System.out.println(response);
-//            Assert.isTrue(response.getStatusCode() == HttpStatus.NOT_FOUND, "Код ответа должен быть 404");
-//            Assert.isTrue(response.getBody() == null, "Тело ответа должно быть пустым");
+            Long id = 2L;
+
+            Mockito.doThrow(new PizzeriaNotFoundException("Pizzeria is not found for id:")).when(pizzeriaService).deleteById(id);
+
+            ResponseEntity<?> response = pizzeriaController.deletePizzeriaById(id);
+            System.out.println(response);
+            Assert.isTrue(response.getStatusCode() == HttpStatus.NOT_FOUND, "Код ответа должен быть 404");
+            Assert.isTrue(response.getBody() == null, "Тело ответа должно быть пустым");
         }
     }
 
