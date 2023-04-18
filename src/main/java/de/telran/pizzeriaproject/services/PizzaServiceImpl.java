@@ -25,7 +25,7 @@ public class PizzaServiceImpl implements PizzaService {
     @Override
     @Transactional
     public Pizza save(Pizza newPizza) throws DuplicateEntryException {
-        newPizza.setP_id(0L);//Что-бы метод не обновил существующую пиццу
+        newPizza.setId(0L);//Что-бы метод не обновил существующую пиццу
         //Перехватываем DataIntegrityViolationException, которое появляется
         //при попытке сохранения сущности с одинаковыми параметрами
         try{
@@ -64,7 +64,7 @@ public class PizzaServiceImpl implements PizzaService {
         pizzaRepositories.findById(id)
                 .orElseThrow(() -> new PizzaNotFoundException("Pizza is not found for id: " + id));
         //Устанавливаем id полученный из пути (вдруг в теле другой id, чтобы не была создана новая пицца)
-        newPizza.setP_id(id);
+        newPizza.setId(id);
         //Пытаемся сохранить новую пиццу, если будет DataIntegrityViolationException,
         // то перехватываем ее в контроллере
         return pizzaRepositories.save(newPizza);

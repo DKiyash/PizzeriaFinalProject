@@ -1,8 +1,6 @@
 package de.telran.pizzeriaproject.services;
 
 import de.telran.pizzeriaproject.domain.Pizza;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -57,14 +55,14 @@ public class PizzaPriceScheduler {
         List<Pizza> pizzaList = pizzaService.findAll();
         Double pizzaCurrentBasePrice;
         for (Pizza pizza : pizzaList) {
-            pizzaCurrentBasePrice = pizza.getP_base_price();
+            pizzaCurrentBasePrice = pizza.getBasePrice();
             //Если текущая цена выше, чем скидка, то вносим изменения, чтобы не было ошибки
             if (pizzaCurrentBasePrice > LUNCH_TIME_DISCOUNT) {
                 //Уменьшение стоимости на фиксированную величину
                 pizzaCurrentBasePrice -= LUNCH_TIME_DISCOUNT;
-                pizza.setP_base_price(pizzaCurrentBasePrice);
+                pizza.setBasePrice(pizzaCurrentBasePrice);
                 //Сохранение нового значения в БД
-                pizzaService.updatePizzaById(pizza.getP_id(), pizza);
+                pizzaService.updatePizzaById(pizza.getId(), pizza);
             }
         }
         log.info("It`s lunchtime. The price changed for Pizza.");
@@ -90,11 +88,11 @@ public class PizzaPriceScheduler {
         List<Pizza> pizzaList = pizzaService.findAll();
         Double pizzaCurrentBasePrice;
         for (Pizza pizza : pizzaList) {
-            pizzaCurrentBasePrice = pizza.getP_base_price();
+            pizzaCurrentBasePrice = pizza.getBasePrice();
             pizzaCurrentBasePrice += LUNCH_TIME_DISCOUNT;//Увеличение стоимости на фиксированную величину
-            pizza.setP_base_price(pizzaCurrentBasePrice);
+            pizza.setBasePrice(pizzaCurrentBasePrice);
             //Сохранение нового значения в БД
-            pizzaService.updatePizzaById(pizza.getP_id(), pizza);
+            pizzaService.updatePizzaById(pizza.getId(), pizza);
         }
         log.info("Lunch is over. Pizza prices are basic.");
     }

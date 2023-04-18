@@ -23,21 +23,21 @@ public class Pizzeria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pr_id")
-    private Long pr_id;
+    private Long id;
 
     @NotEmpty
     @NotBlank
     @NotNull
     @Size(min = 1, max = 64)
     @Column(name = "pr_name")
-    private String pr_name;
+    private String name;
 
     @NotEmpty
     @NotBlank
     @NotNull
     @Size(min = 1, max = 128)
     @Column(name = "pr_address")
-    private String pr_address;
+    private String address;
 
     @ManyToMany
     @JoinTable(name = "pizzeria_pizza", joinColumns = @JoinColumn(name = "pizzeria_id"),
@@ -45,9 +45,9 @@ public class Pizzeria {
     private Set<Pizza> pizzaSet = new HashSet<>();
 
 
-    public Pizzeria(String pr_name, String pr_address) {
-        this.pr_name = pr_name;
-        this.pr_address = pr_address;
+    public Pizzeria(String name, String address) {
+        this.name = name;
+        this.address = address;
     }
 
     @Override
@@ -55,11 +55,11 @@ public class Pizzeria {
         if (this == o) return true;
         if (!(o instanceof Pizzeria pizzeria)) return false;
 
-        return getPr_id() != null ? getPr_id().equals(pizzeria.getPr_id()) : pizzeria.getPr_id() == null;
+        return getId() != null ? getId().equals(pizzeria.getId()) : pizzeria.getId() == null;
     }
 
     @Override
     public int hashCode() {
-        return getPr_id() != null ? getPr_id().hashCode() : 0;
+        return getId() != null ? getId().hashCode() : 0;
     }
 }

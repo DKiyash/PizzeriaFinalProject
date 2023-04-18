@@ -77,7 +77,7 @@ class PizzeriaControllerUnitTest {
             ResponseEntity<?> response = pizzeriaController.createPizzeria(newPizzeria);
             Assert.isTrue(response.getStatusCode() == HttpStatus.CREATED, "Код ответа должен быть 201");
             Assert.notNull(response.getHeaders().getLocation(), "Ответ должен содержать список location");
-            Assertions.assertEquals(newPizzeria.getPr_id(), response.getBody());
+            Assertions.assertEquals(newPizzeria.getId(), response.getBody());
         }
 
         @Test

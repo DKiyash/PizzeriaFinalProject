@@ -50,11 +50,11 @@ public class PizzaIntegrationTest extends IntegrationTestsInfrastructureInitiali
 
             //Создаем новый объект пицца (которого нет в базе)
             Pizza newPizza = new Pizza();
-            newPizza.setP_id(Mockito.any());
-            newPizza.setP_name("Pizza_name_" + generatedString);
-            newPizza.setP_description("Description_" + generatedString);
-            newPizza.setP_base_price(10.0);
-            newPizza.setP_photo_link("url");
+            newPizza.setId(Mockito.any());
+            newPizza.setName("Pizza_name_" + generatedString);
+            newPizza.setDescription("Description_" + generatedString);
+            newPizza.setBasePrice(10.0);
+            newPizza.setPhotoLink("url");
 
             MvcResult result=mockMvc.perform(MockMvcRequestBuilders.post(API_PATH + "")
                             .with(httpBasic("admin","admin"))
@@ -78,11 +78,11 @@ public class PizzaIntegrationTest extends IntegrationTestsInfrastructureInitiali
         void createPizza_WithDuplicateEntryException_returnStatus409() throws Exception {
             //Создаем объект пицца (пицца с такими параметрами уже должна быть в базе)
             Pizza newPizza = new Pizza();
-            newPizza.setP_id(Mockito.any());
-            newPizza.setP_name("Pizza_name_01");
-            newPizza.setP_description("Description_01");
-            newPizza.setP_base_price(10.0);
-            newPizza.setP_photo_link("url_01");
+            newPizza.setId(Mockito.any());
+            newPizza.setName("Pizza_name_01");
+            newPizza.setDescription("Description_01");
+            newPizza.setBasePrice(10.0);
+            newPizza.setPhotoLink("url_01");
 
             mockMvc.perform(MockMvcRequestBuilders.post(API_PATH + "")
                             .with(httpBasic("admin","admin"))
@@ -120,11 +120,11 @@ public class PizzaIntegrationTest extends IntegrationTestsInfrastructureInitiali
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.p_id").value(id))
-                    .andExpect(jsonPath("$.p_name").value("Pizza_name_01"))
-                    .andExpect(jsonPath("$.p_description").value("Description_01"))
-                    .andExpect(jsonPath("$.p_base_price").value("10.0"))
-                    .andExpect(jsonPath("$.p_photo_link").value("url_01"));
+                    .andExpect(jsonPath("$.id").value(id))
+                    .andExpect(jsonPath("$.name").value("Pizza_name_01"))
+                    .andExpect(jsonPath("$.description").value("Description_01"))
+                    .andExpect(jsonPath("$.basePrice").value("10.0"))
+                    .andExpect(jsonPath("$.photoLink").value("url_01"));
         }
 
         @Test
@@ -147,11 +147,11 @@ public class PizzaIntegrationTest extends IntegrationTestsInfrastructureInitiali
             Long id = 2L;
             //Создаем объект пицца с измененными параметрами
             Pizza newPizza = new Pizza();
-            newPizza.setP_id(Mockito.any());
-            newPizza.setP_name("Pizza_name_02_Update");
-            newPizza.setP_description("Description_02_Update");
-            newPizza.setP_base_price(50.0);
-            newPizza.setP_photo_link("url_02_Update");
+            newPizza.setId(Mockito.any());
+            newPizza.setName("Pizza_name_02_Update");
+            newPizza.setDescription("Description_02_Update");
+            newPizza.setBasePrice(50.0);
+            newPizza.setPhotoLink("url_02_Update");
 
             mockMvc.perform(MockMvcRequestBuilders.put(API_PATH + "/{id}", id)
                             .with(httpBasic("admin","admin"))
@@ -160,11 +160,11 @@ public class PizzaIntegrationTest extends IntegrationTestsInfrastructureInitiali
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.p_id").value(id))
-                    .andExpect(jsonPath("$.p_name").value(newPizza.getP_name()))
-                    .andExpect(jsonPath("$.p_description").value(newPizza.getP_description()))
-                    .andExpect(jsonPath("$.p_base_price").value(newPizza.getP_base_price()))
-                    .andExpect(jsonPath("$.p_photo_link").value(newPizza.getP_photo_link()));
+                    .andExpect(jsonPath("$.id").value(id))
+                    .andExpect(jsonPath("$.name").value(newPizza.getName()))
+                    .andExpect(jsonPath("$.description").value(newPizza.getDescription()))
+                    .andExpect(jsonPath("$.basePrice").value(newPizza.getBasePrice()))
+                    .andExpect(jsonPath("$.photoLink").value(newPizza.getPhotoLink()));
         }
 
         @Test
@@ -173,11 +173,11 @@ public class PizzaIntegrationTest extends IntegrationTestsInfrastructureInitiali
             Long id = 3L;
             //Создаем объект пицца (пицца с такими параметрами уже должна быть в базе)
             Pizza newPizza = new Pizza();
-            newPizza.setP_id(Mockito.any());
-            newPizza.setP_name("Pizza_name_01");
-            newPizza.setP_description("Description_01");
-            newPizza.setP_base_price(10.0);
-            newPizza.setP_photo_link("url_01");
+            newPizza.setId(Mockito.any());
+            newPizza.setName("Pizza_name_01");
+            newPizza.setDescription("Description_01");
+            newPizza.setBasePrice(10.0);
+            newPizza.setPhotoLink("url_01");
 
             mockMvc.perform(MockMvcRequestBuilders.put(API_PATH + "/{id}", id)
                             .with(httpBasic("admin","admin"))
@@ -193,11 +193,11 @@ public class PizzaIntegrationTest extends IntegrationTestsInfrastructureInitiali
             Long id = 400L;
             //Создаем объект пицца с измененными параметрами
             Pizza newPizza = new Pizza();
-            newPizza.setP_id(Mockito.any());
-            newPizza.setP_name("Pizza_name_03_Update");
-            newPizza.setP_description("Description_03_Update");
-            newPizza.setP_base_price(50.0);
-            newPizza.setP_photo_link("url_03_Update");
+            newPizza.setId(Mockito.any());
+            newPizza.setName("Pizza_name_03_Update");
+            newPizza.setDescription("Description_03_Update");
+            newPizza.setBasePrice(50.0);
+            newPizza.setPhotoLink("url_03_Update");
 
             mockMvc.perform(MockMvcRequestBuilders.put(API_PATH + "/{id}", id)
                             .with(httpBasic("admin","admin"))

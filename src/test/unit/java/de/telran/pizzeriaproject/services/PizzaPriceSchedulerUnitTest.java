@@ -22,18 +22,18 @@ class PizzaPriceSchedulerUnitTest {
         //Создаем список пицц для теста
         List<Pizza> pizzaList = new ArrayList<>();
         Pizza pizza1 = new Pizza("Pizza_name_01", "Description_01", 10.0, "url_01");
-        pizza1.setP_id(1L);
+        pizza1.setId(1L);
         pizzaList.add(pizza1);
 
         Pizza pizza2 = new Pizza("Pizza_name_02", "Description_02", 10.0, "url_02");
-        pizza2.setP_id(2L);
+        pizza2.setId(2L);
         pizzaList.add(pizza2);
 
         Mockito.when(pizzaService.findAll()).thenReturn(pizzaList);
 
         pizzaPriceScheduler.schedualePizzaPriceLunch();
-        Assert.isTrue(pizzaList.get(0).getP_base_price() == 8.0, "Цена для пицы с id=1 должна быть снижена в обед");
-        Assert.isTrue(pizzaList.get(1).getP_base_price() == 8.0, "Цена для пицы с id=2 должна быть снижена в обед");
+        Assert.isTrue(pizzaList.get(0).getBasePrice() == 8.0, "Цена для пиццы с id=1 должна быть снижена в обед");
+        Assert.isTrue(pizzaList.get(1).getBasePrice() == 8.0, "Цена для пиццы с id=2 должна быть снижена в обед");
     }
 
     //Тестирование метода schedualePizzaPriceNoLunch (снижение стоимости всех пицц в обед)
@@ -44,17 +44,17 @@ class PizzaPriceSchedulerUnitTest {
         //Создаем список пицц для теста
         List<Pizza> pizzaList = new ArrayList<>();
         Pizza pizza1 = new Pizza("Pizza_name_01", "Description_01", 8.0, "url_01");
-        pizza1.setP_id(1L);
+        pizza1.setId(1L);
         pizzaList.add(pizza1);
 
         Pizza pizza2 = new Pizza("Pizza_name_02", "Description_02", 8.0, "url_02");
-        pizza2.setP_id(2L);
+        pizza2.setId(2L);
         pizzaList.add(pizza2);
 
         Mockito.when(pizzaService.findAll()).thenReturn(pizzaList);
 
         pizzaPriceScheduler.schedualePizzaPriceNoLunch();
-        Assert.isTrue(pizzaList.get(0).getP_base_price() == 10.0, "Цена для пицы с id=1 должна быть снижена в обед");
-        Assert.isTrue(pizzaList.get(1).getP_base_price() == 10.0, "Цена для пицы с id=2 должна быть снижена в обед");
+        Assert.isTrue(pizzaList.get(0).getBasePrice() == 10.0, "Цена для пиццы с id=1 должна быть снижена в обед");
+        Assert.isTrue(pizzaList.get(1).getBasePrice() == 10.0, "Цена для пиццы с id=2 должна быть снижена в обед");
     }
 }

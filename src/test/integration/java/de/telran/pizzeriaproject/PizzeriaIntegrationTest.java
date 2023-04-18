@@ -51,9 +51,9 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
 
             //Создаем новый объект пиццерия (которого нет в базе)
             Pizzeria newPizzeria = new Pizzeria();
-            newPizzeria.setPr_id(Mockito.any());
-            newPizzeria.setPr_name("Pizzeria_" + generatedString);
-            newPizzeria.setPr_address("Address_" + generatedString);
+            newPizzeria.setId(Mockito.any());
+            newPizzeria.setName("Pizzeria_" + generatedString);
+            newPizzeria.setAddress("Address_" + generatedString);
 
             MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(API_PATH + "")
                             .with(httpBasic("admin", "admin"))
@@ -80,17 +80,17 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
 
             //Создаем новый объект пиццерия (которого нет в базе)
             Pizzeria newPizzeria = new Pizzeria();
-            newPizzeria.setPr_id(Mockito.any());
-            newPizzeria.setPr_name("Pizzeria_" + generatedString);
-            newPizzeria.setPr_address("Address_" + generatedString);
+            newPizzeria.setId(Mockito.any());
+            newPizzeria.setName("Pizzeria_" + generatedString);
+            newPizzeria.setAddress("Address_" + generatedString);
 
             //Создаем объект пицца для передачи в теле запроса (Важно: Пиццы должны уже быть в перечне пицц)
             Pizza newPizza1 = new Pizza();
-            newPizza1.setP_id(1L);
+            newPizza1.setId(1L);
             newPizzeria.getPizzaSet().add(newPizza1);
 
             Pizza newPizza2 = new Pizza();
-            newPizza2.setP_id(2L);
+            newPizza2.setId(2L);
             newPizzeria.getPizzaSet().add(newPizza2);
 
             MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(API_PATH + "")
@@ -118,17 +118,17 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
 
             //Создаем новый объект пиццерия (которого нет в базе)
             Pizzeria newPizzeria = new Pizzeria();
-            newPizzeria.setPr_id(Mockito.any());
-            newPizzeria.setPr_name("Pizzeria_" + generatedString);
-            newPizzeria.setPr_address("Address_" + generatedString);
+            newPizzeria.setId(Mockito.any());
+            newPizzeria.setName("Pizzeria_" + generatedString);
+            newPizzeria.setAddress("Address_" + generatedString);
 
             //Создаем объект пицца для передачи в теле запроса (Одна из пицц не должна быть в перечне пицц)
             Pizza newPizza1 = new Pizza();
-            newPizza1.setP_id(1L);
+            newPizza1.setId(1L);
             newPizzeria.getPizzaSet().add(newPizza1);
 
             Pizza newPizza2 = new Pizza();
-            newPizza2.setP_id(30L);
+            newPizza2.setId(30L);
             newPizzeria.getPizzaSet().add(newPizza2);
 
             mockMvc.perform(MockMvcRequestBuilders.post(API_PATH + "")
@@ -144,17 +144,17 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
         void createPizzeria_WithDuplicateEntryException_returnStatus409() throws Exception {
             //Создаем объект пиццерия (пицца с такими параметрами уже должна быть в базе)
             Pizzeria newPizzeria = new Pizzeria();
-            newPizzeria.setPr_id(Mockito.any());
-            newPizzeria.setPr_name("Pizzeria_01");
-            newPizzeria.setPr_address("Address_01");
+            newPizzeria.setId(Mockito.any());
+            newPizzeria.setName("Pizzeria_01");
+            newPizzeria.setAddress("Address_01");
 
             //Создаем объект пицца для передачи в теле запроса (Важно: Пиццы должны уже быть в перечне пицц)
             Pizza newPizza1 = new Pizza();
-            newPizza1.setP_id(1L);
+            newPizza1.setId(1L);
             newPizzeria.getPizzaSet().add(newPizza1);
 
             Pizza newPizza2 = new Pizza();
-            newPizza2.setP_id(2L);
+            newPizza2.setId(2L);
             newPizzeria.getPizzaSet().add(newPizza2);
 
             mockMvc.perform(MockMvcRequestBuilders.post(API_PATH + "")
@@ -193,9 +193,9 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.pr_id").value(id))
-                    .andExpect(jsonPath("$.pr_name").value("Pizzeria_01"))
-                    .andExpect(jsonPath("$.pr_address").value("Address_01"));
+                    .andExpect(jsonPath("$.id").value(id))
+                    .andExpect(jsonPath("$.name").value("Pizzeria_01"))
+                    .andExpect(jsonPath("$.address").value("Address_01"));
         }
 
         @Test
@@ -218,9 +218,9 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
             Long id = 2L;
             //Создаем объект пиццерия с измененными параметрами
             Pizzeria newPizzeria = new Pizzeria();
-            newPizzeria.setPr_id(Mockito.any());
-            newPizzeria.setPr_name("Pizzeria_02_Update");
-            newPizzeria.setPr_address("Address_02_Update");
+            newPizzeria.setId(Mockito.any());
+            newPizzeria.setName("Pizzeria_02_Update");
+            newPizzeria.setAddress("Address_02_Update");
 
             mockMvc.perform(MockMvcRequestBuilders.put(API_PATH + "/{id}", id)
                             .with(httpBasic("admin","admin"))
@@ -229,9 +229,9 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.pr_id").value(id))
-                    .andExpect(jsonPath("$.pr_name").value(newPizzeria.getPr_name()))
-                    .andExpect(jsonPath("$.pr_address").value(newPizzeria.getPr_address()));
+                    .andExpect(jsonPath("$.id").value(id))
+                    .andExpect(jsonPath("$.name").value(newPizzeria.getName()))
+                    .andExpect(jsonPath("$.address").value(newPizzeria.getAddress()));
         }
 
         @Test
@@ -240,17 +240,17 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
             Long id = 3L;
             //Создаем объект пиццерия с измененными параметрами
             Pizzeria newPizzeria = new Pizzeria();
-            newPizzeria.setPr_id(Mockito.any());
-            newPizzeria.setPr_name("Pizzeria_03_Update");
-            newPizzeria.setPr_address("Address_03_Update");
+            newPizzeria.setId(Mockito.any());
+            newPizzeria.setName("Pizzeria_03_Update");
+            newPizzeria.setAddress("Address_03_Update");
 
             //Создаем объект пицца для передачи в теле запроса (Важно: Пиццы должны уже быть в перечне пицц)
             Pizza newPizza1 = new Pizza();
-            newPizza1.setP_id(1L);
+            newPizza1.setId(1L);
             newPizzeria.getPizzaSet().add(newPizza1);
 
             Pizza newPizza2 = new Pizza();
-            newPizza2.setP_id(2L);
+            newPizza2.setId(2L);
             newPizzeria.getPizzaSet().add(newPizza2);
 
             mockMvc.perform(MockMvcRequestBuilders.put(API_PATH + "/{id}", id)
@@ -260,11 +260,11 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.pr_id").value(id))
-                    .andExpect(jsonPath("$.pr_name").value(newPizzeria.getPr_name()))
-                    .andExpect(jsonPath("$.pr_address").value(newPizzeria.getPr_address()))
-                    .andExpect(jsonPath("$.pizzaSet.[0].p_id").value(newPizza1.getP_id()))
-                    .andExpect(jsonPath("$.pizzaSet.[1].p_id").value(newPizza2.getP_id()));
+                    .andExpect(jsonPath("$.id").value(id))
+                    .andExpect(jsonPath("$.name").value(newPizzeria.getName()))
+                    .andExpect(jsonPath("$.address").value(newPizzeria.getAddress()))
+                    .andExpect(jsonPath("$.pizzaSet.[0].id").value(newPizza1.getId()))
+                    .andExpect(jsonPath("$.pizzaSet.[1].id").value(newPizza2.getId()));
         }
 
         @Test
@@ -273,17 +273,17 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
             Long id = 3L;
             //Создаем объект пиццерия с измененными параметрами
             Pizzeria newPizzeria = new Pizzeria();
-            newPizzeria.setPr_id(Mockito.any());
-            newPizzeria.setPr_name("Pizzeria_03_Update_WrongList");
-            newPizzeria.setPr_address("Address_03_Update_WrongList");
+            newPizzeria.setId(Mockito.any());
+            newPizzeria.setName("Pizzeria_03_Update_WrongList");
+            newPizzeria.setAddress("Address_03_Update_WrongList");
 
             //Создаем объект пицца для передачи в теле запроса (Одна из пицц не должна быть в перечне пицц)
             Pizza newPizza1 = new Pizza();
-            newPizza1.setP_id(1L);
+            newPizza1.setId(1L);
             newPizzeria.getPizzaSet().add(newPizza1);
 
             Pizza newPizza2 = new Pizza();
-            newPizza2.setP_id(400L);//Такой пиццы нет в списке пицц
+            newPizza2.setId(400L);//Такой пиццы нет в списке пицц
             newPizzeria.getPizzaSet().add(newPizza2);
 
             mockMvc.perform(MockMvcRequestBuilders.put(API_PATH + "/{id}", id)
@@ -300,17 +300,17 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
             Long id = 3L;
             //Создаем объект пиццерия (пиццерия с такими параметрами уже должна быть в базе берем пиццерию с id=1)
             Pizzeria newPizzeria = new Pizzeria();
-            newPizzeria.setPr_id(Mockito.any());
-            newPizzeria.setPr_name("Pizzeria_01");
-            newPizzeria.setPr_address("Address_01");
+            newPizzeria.setId(Mockito.any());
+            newPizzeria.setName("Pizzeria_01");
+            newPizzeria.setAddress("Address_01");
 
             //Создаем объект пицца для передачи в теле запроса (Важно: Пиццы должны уже быть в перечне пицц)
             Pizza newPizza1 = new Pizza();
-            newPizza1.setP_id(1L);
+            newPizza1.setId(1L);
             newPizzeria.getPizzaSet().add(newPizza1);
 
             Pizza newPizza2 = new Pizza();
-            newPizza2.setP_id(2L);
+            newPizza2.setId(2L);
             newPizzeria.getPizzaSet().add(newPizza2);
 
             mockMvc.perform(MockMvcRequestBuilders.put(API_PATH + "/{id}", id)
@@ -327,9 +327,9 @@ public class PizzeriaIntegrationTest extends IntegrationTestsInfrastructureIniti
             Long id = 400L;
             //Создаем объект пиццерия с измененными параметрами
             Pizzeria newPizzeria = new Pizzeria();
-            newPizzeria.setPr_id(Mockito.any());
-            newPizzeria.setPr_name("Pizzeria_03_Update");
-            newPizzeria.setPr_address("Address_03_Update");
+            newPizzeria.setId(Mockito.any());
+            newPizzeria.setName("Pizzeria_03_Update");
+            newPizzeria.setAddress("Address_03_Update");
 
             mockMvc.perform(MockMvcRequestBuilders.put(API_PATH + "/{id}", id)
                             .with(httpBasic("admin","admin"))

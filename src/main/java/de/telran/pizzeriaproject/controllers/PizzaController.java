@@ -68,9 +68,9 @@ public class PizzaController {
             if (pizza != null) {
                 URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                         .path("/{id}")
-                        .buildAndExpand(pizza.getP_id())
+                        .buildAndExpand(pizza.getId())
                         .toUri();
-                return ResponseEntity.created(location).body(pizza.getP_id());
+                return ResponseEntity.created(location).body(pizza.getId());
             }
             //Если новая пицца не добавлена, то вернуть "500 Internal Server Error"
             else {

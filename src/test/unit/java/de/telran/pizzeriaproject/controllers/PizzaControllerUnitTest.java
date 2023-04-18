@@ -35,11 +35,11 @@ class PizzaControllerUnitTest {
         Pageable pageable = PageRequest.of(0, 5);
         List<Pizza> pizzaList = new ArrayList<>();
         Pizza pizza1 = new Pizza("Pizza_name_01", "Description_01", 10.0, "url_01");
-        pizza1.setP_id(1L);
+        pizza1.setId(1L);
         pizzaList.add(pizza1);
 
         Pizza pizza2 = new Pizza("Pizza_name_02", "Description_02", 10.0, "url_02");
-        pizza2.setP_id(2L);
+        pizza2.setId(2L);
         pizzaList.add(pizza2);
 
         Mockito.when(pizzaService.findAll(pageable)).thenReturn(pizzaList);
@@ -58,7 +58,7 @@ class PizzaControllerUnitTest {
         void createPizza_returnIdCreatedPizzaAndLocationAndStatus201() {
             //Создаем новый объект пицца для теста
             Pizza newPizza = new Pizza("Pizza_name_03", "Description_03", 10.0, "url_03");
-            newPizza.setP_id(3L);
+            newPizza.setId(3L);
 
             // create a mock request (for location)
             MockHttpServletRequest request = new MockHttpServletRequest();
@@ -69,7 +69,7 @@ class PizzaControllerUnitTest {
             ResponseEntity<?> response = pizzaController.createPizza(newPizza);
             Assert.isTrue(response.getStatusCode() == HttpStatus.CREATED, "Код ответа должен быть 201");
             Assert.notNull(response.getHeaders().getLocation(), "Ответ должен содержать список location");
-            Assertions.assertEquals(newPizza.getP_id(), response.getBody());
+            Assertions.assertEquals(newPizza.getId(), response.getBody());
         }
 
         @Test
@@ -77,7 +77,7 @@ class PizzaControllerUnitTest {
         void createPizza_returnStatus500() {
             //Создаем новый объект пицца для теста
             Pizza newPizza = new Pizza("Pizza_name_03", "Description_03", 10.0, "url_03");
-            newPizza.setP_id(3L);
+            newPizza.setId(3L);
 
             Mockito.when(pizzaService.save(newPizza)).thenReturn(null);
 
@@ -91,7 +91,7 @@ class PizzaControllerUnitTest {
         void createPizzeria_returnStatus409() {
             //Создаем новый объект пицца для теста
             Pizza newPizza = new Pizza("Pizza_name_03", "Description_03", 10.0, "url_03");
-            newPizza.setP_id(3L);
+            newPizza.setId(3L);
 
             Mockito.when(pizzaService.save(newPizza)).thenThrow(new DuplicateEntryException("Pizza with these parameters already exists"));
 
@@ -111,7 +111,7 @@ class PizzaControllerUnitTest {
             Long id = 3L;
             //Создаем новый объект пицца для теста
             Pizza newPizza = new Pizza("Pizza_name_03", "Description_03", 10.0, "url_03");
-            newPizza.setP_id(id);
+            newPizza.setId(id);
 
             Mockito.when(pizzaService.findById(id)).thenReturn(Optional.of(newPizza));
 
@@ -126,7 +126,7 @@ class PizzaControllerUnitTest {
             Long id = 3L;
             //Создаем новый объект пицца для теста
             Pizza newPizza = new Pizza("Pizza_name_03", "Description_03", 10.0, "url_03");
-            newPizza.setP_id(id);
+            newPizza.setId(id);
 
             Mockito.when(pizzaService.findById(id)).thenReturn(Optional.empty());
 
@@ -146,7 +146,7 @@ class PizzaControllerUnitTest {
             Long id = 3L;
             //Создаем новый объект пицца для теста
             Pizza newPizza = new Pizza("Pizza_name_03", "Description_03", 10.0, "url_03");
-            newPizza.setP_id(id);
+            newPizza.setId(id);
 
             Mockito.when(pizzaService.updatePizzaById(id, newPizza)).thenReturn(newPizza);
 
@@ -161,7 +161,7 @@ class PizzaControllerUnitTest {
             Long id = 3L;
             //Создаем новый объект пицца для теста
             Pizza newPizza = new Pizza("Pizza_name_03", "Description_03", 10.0, "url_03");
-            newPizza.setP_id(id);
+            newPizza.setId(id);
 
             Mockito.when(pizzaService.updatePizzaById(id, newPizza)).thenThrow(new PizzaNotFoundException("Pizza is not found for id:"));
 
@@ -176,7 +176,7 @@ class PizzaControllerUnitTest {
             Long id = 3L;
             //Создаем новый объект пицца для теста
             Pizza newPizza = new Pizza("Pizza_name_03", "Description_03", 10.0, "url_03");
-            newPizza.setP_id(id);
+            newPizza.setId(id);
 
             Mockito.when(pizzaService.updatePizzaById(id, newPizza)).thenThrow(new DataIntegrityViolationException("Pizza with these parameters already exists"));
 

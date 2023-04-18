@@ -36,12 +36,12 @@ public class PizzeriaServiceImpl implements PizzeriaService {
         //Если список не пустой, то проверяем все ли пиццы из существующего списка пицц
         if(!pizzaSet.isEmpty()){
             for (Pizza pz:pizzaSet) {
-                pizzaRepositories.findById(pz.getP_id())
-                        .orElseThrow(() -> new PizzaNotFoundException("Pizza not found for id: " + pz.getP_id()));
+                pizzaRepositories.findById(pz.getId())
+                        .orElseThrow(() -> new PizzaNotFoundException("Pizza not found for id: " + pz.getId()));
             }
         }
         //Если все пиццы в списке существуют или список пустой, то создаем/обновляем пиццерию
-        newPizzeria.setPr_id(0L);//Что-бы метод не обновил существующую пиццерию
+        newPizzeria.setId(0L);//Что-бы метод не обновил существующую пиццерию
         //Перехватываем DataIntegrityViolationException, которое появляется
         //при попытке сохранения сущности с одинаковыми параметрами
         try{
@@ -74,14 +74,14 @@ public class PizzeriaServiceImpl implements PizzeriaService {
         pizzeriaRepositories.findById(id)
                 .orElseThrow(() -> new PizzeriaNotFoundException("Pizzeria is not found for id: " + id));
         //Устанавливаем id полученный из пути (вдруг в теле другой id, чтобы не была создана новая пиццерия)
-        newPizzeria.setPr_id(id);
+        newPizzeria.setId(id);
         //Проверяем список пицц в сохраняемой пиццерии
         Set<Pizza> pizzaSet = newPizzeria.getPizzaSet();
         //Если список не пустой, то проверяем все ли пиццы из существующего списка пицц
         if(!pizzaSet.isEmpty()){
             for (Pizza pz:pizzaSet) {
-                pizzaRepositories.findById(pz.getP_id())
-                        .orElseThrow(() -> new PizzaNotFoundException("Pizza is not found for id: " + pz.getP_id()));
+                pizzaRepositories.findById(pz.getId())
+                        .orElseThrow(() -> new PizzaNotFoundException("Pizza is not found for id: " + pz.getId()));
             }
         }
         //Пытаемся сохранить новую пиццу, если будет DataIntegrityViolationException,
