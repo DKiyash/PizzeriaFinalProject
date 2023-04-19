@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+ db:
+     image: mysql:8
+     volumes:
+       - ./db_data:/var/lib/mysql
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: somewordpress
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: wordpress
+       MYSQL_PASSWORD: wordpress
+    ports:
+      - "3306:3306"
+
+ app:
+    build:
+      context: ./
+    depends_on:
+      - db
+    environment:
+      - JAVA_TOOL_OPTIONS= "-Xms256m -Xmx256m"
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:3306/phonebook
+      - SPRING_FLYWAY_URL=jdbc:postgresql://db:3306/phonebook
+      - SPRING_FLYWAY_USER=postgres
+      - SPRING_FLYWAY_PASSWORD=111111222
+      - SPRING_DATASOURCE_PASSWORD=111111222
+      - SPRING_DATASOURCE_username=postgres
+      - POSTGRES_DB=phonebook
+    ports:
+      - "80:8080"
+  #   - "8080:8080"
+
+
+#  volumes:
+#    db:
+
