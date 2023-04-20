@@ -6,7 +6,7 @@ services:
      container_name: pizzeria_db
      volumes:
        - ./db_data:/var/lib/mysql
-     restart: always
+#     restart: always
      environment:
        MYSQL_ROOT_PASSWORD: root
        MYSQL_DATABASE: pizzeria_project
@@ -16,8 +16,9 @@ services:
        - "3307:3306"
 
  app:
-    build:
-      context: ./
+    image: dkiyash/pizzeria_project:0.0.1-SNAPSHOT
+#    build:
+#      context: ./
     container_name: pizzeria_app
     depends_on:
       - db
