@@ -112,7 +112,18 @@
 3.	Список Пицц обновляется в режиме реального времени при добавлении или удалении элементов.
 
 ## Entity Relations Diagram
-![ER Diagram](https://github.com/DKiyash/PizzeriaFinalProject/blob/master/documents/ER%20Diagram.jpg)
+![ER Diagram](documents/ER Diagram.jpg)
+
+## Containers Diagram
+![ER Diagram](documents/Containers Diagram.jpg)
+*Описание:* <br> Данная диаграмма описывает структуру сервиса на уровне контенеров. <br>
+Сервис развернут на сервере Amazon Web Services, instance type: t2.small на базе OS Ubuntu. <br>
+Сервис состоит из двух контейнеров. <br>
+Контейнер **pizzeria_app** содержит spring-boot приложение, которое принимает HTTP запросы от браузера,
+обрабатывает их и работает с базой данных. <br>
+Контейнер **pizzeria_db** содержит базу данных MySQL. В контейнер с базой данных смонтирована
+локальная папка в которой хранятся все данные из базы данных, что обеспечивает сохранность данных в базе при остановке
+работы контейнера **pizzeria_db**.
 
 ## Rest API in OpenAPI 3
 [Rest API](https://github.com/DKiyash/PizzeriaFinalProject/blob/master/documents/openapi.yaml)
