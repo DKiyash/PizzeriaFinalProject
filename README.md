@@ -115,7 +115,7 @@
 ![ER Diagram](https://github.com/DKiyash/PizzeriaFinalProject/blob/f5d5055c5a9e0e5c94a33b7c6476223f2304e0dd/documents/ER%20Diagram.jpg)
 
 ## Containers Diagram
-![ER Diagram](https://github.com/DKiyash/PizzeriaFinalProject/blob/f5d5055c5a9e0e5c94a33b7c6476223f2304e0dd/documents/Containers%20Diagram.jpg)
+![ER Diagram](https://github.com/DKiyash/PizzeriaFinalProject/blob/3f5bdd589f903b022bf0f4cd7d911b92fc4527ac/documents/Containers%20Diagram.jpg)
 *Описание:* <br> Данная диаграмма описывает структуру сервиса на уровне контенеров. <br>
 Сервис развернут на сервере Amazon Web Services, instance type: t2.small на базе OS Ubuntu. <br>
 Сервис состоит из двух контейнеров. <br>
