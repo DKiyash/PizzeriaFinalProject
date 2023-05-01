@@ -112,10 +112,10 @@
 3.	Список Пицц обновляется в режиме реального времени при добавлении или удалении элементов.
 
 ## Entity Relations Diagram
-![ER Diagram](documents/ER Diagram.jpg)
+![ER Diagram](./documents/ER Diagram.jpg)
 
 ## Containers Diagram
-![ER Diagram](documents/Containers Diagram.jpg)
+![ER Diagram](./documents/Containers Diagram.jpg)
 *Описание:* <br> Данная диаграмма описывает структуру сервиса на уровне контенеров. <br>
 Сервис развернут на сервере Amazon Web Services, instance type: t2.small на базе OS Ubuntu. <br>
 Сервис состоит из двух контейнеров. <br>
