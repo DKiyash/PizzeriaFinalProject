@@ -127,7 +127,7 @@
 работы контейнера **pizzeria_db**.
 
 ## Components Diagram
-![ER Diagram](https://github.com/DKiyash/PizzeriaFinalProject/blob/3f5bdd589f903b022bf0f4cd7d911b92fc4527ac/documents/Containers%20Diagram.jpg)
+![ER Diagram](https://github.com/DKiyash/PizzeriaFinalProject/blob/master/documents/Components%20Diagram.png)
 *Описание:* <br> Данная диаграмма описывает структуру сервиса на уровне компонентов. <br>
 
 ## Rest API in OpenAPI 3
