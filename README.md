@@ -113,10 +113,11 @@
 
 ## Entity Relations Diagram
 ![ER Diagram](https://github.com/DKiyash/PizzeriaFinalProject/blob/f5d5055c5a9e0e5c94a33b7c6476223f2304e0dd/documents/ER%20Diagram.jpg)
+*Описание:* <br> Данная диаграмма описывает структуру сервиса на уровне сущностей. <br>
 
 ## Containers Diagram
 ![ER Diagram](https://github.com/DKiyash/PizzeriaFinalProject/blob/3f5bdd589f903b022bf0f4cd7d911b92fc4527ac/documents/Containers%20Diagram.jpg)
-*Описание:* <br> Данная диаграмма описывает структуру сервиса на уровне контенеров. <br>
+*Описание:* <br> Данная диаграмма описывает структуру сервиса на уровне контейнеров. <br>
 Сервис развернут на сервере Amazon Web Services, instance type: t2.small на базе OS Ubuntu. <br>
 Сервис состоит из двух контейнеров. <br>
 Контейнер **pizzeria_app** содержит spring-boot приложение, которое принимает HTTP запросы от браузера,
@@ -124,6 +125,10 @@
 Контейнер **pizzeria_db** содержит базу данных MySQL. В контейнер с базой данных смонтирована
 локальная папка в которой хранятся все данные из базы данных, что обеспечивает сохранность данных в базе при остановке
 работы контейнера **pizzeria_db**.
+
+## Components Diagram
+![ER Diagram](https://github.com/DKiyash/PizzeriaFinalProject/blob/3f5bdd589f903b022bf0f4cd7d911b92fc4527ac/documents/Containers%20Diagram.jpg)
+*Описание:* <br> Данная диаграмма описывает структуру сервиса на уровне компонентов. <br>
 
 ## Rest API in OpenAPI 3
 [Rest API](https://github.com/DKiyash/PizzeriaFinalProject/blob/master/documents/openapi.yaml)
